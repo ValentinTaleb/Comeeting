@@ -138,7 +138,6 @@ public class CoworkerActivity extends BaseActivity implements View.OnClickListen
 
                 Picasso.with(getBaseContext())
                         .load(coworker.pictureUrl)
-                        .placeholder(R.drawable.user)
                         .into(mImageView);
 
             } else

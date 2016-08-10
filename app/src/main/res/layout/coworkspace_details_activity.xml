@@ -9,7 +9,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -53,32 +53,40 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <!-- Opening hours -->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/default_margin"
+                android:background="#EFEFEF" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white"
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_margin="16dp"
-                    android:src="@drawable/ic_live_feed_clock"
-                    />
+                    android:src="@drawable/ic_live_feed_clock" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
                     android:paddingRight="16dp"
-                    android:paddingBottom="16dp">
+                    android:paddingTop="16dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Horaire d'ouverture"
-                        android:textSize="16sp"
-                        android:textColor="@color/blackMenuItem"/>
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -86,26 +94,26 @@
                         android:orientation="horizontal"
                         android:paddingTop="8dp">
 
-                         <LinearLayout
-                             android:layout_width="wrap_content"
-                             android:layout_height="wrap_content"
-                             android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Lundi\nMardi\nMercredi\nJeudi\nVendredi\nSamedi"
-                                android:textSize="14sp"
+                                android:layout_marginBottom="5dp"
                                 android:lineSpacingExtra="10dp"
-                                android:textColor="@color/scheduleItem"/>
+                                android:text="Lundi\nMardi\nMercredi\nJeudi\nVendredi\nSamedi"
+                                android:textSize="14sp" />
 
-                             <TextView
-                                 android:layout_width="wrap_content"
-                                 android:layout_height="wrap_content"
-                                 android:text="Dimanche"
-                                 android:textSize="14sp"
-                                 android:paddingBottom="10dp"
-                                 android:textColor="@color/scheduleItemSelected"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingBottom="10dp"
+                                android:text="Dimanche"
+                                android:textColor="@color/green"
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
@@ -117,20 +125,21 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="8:00 - 17:00\n8:00 - 17:00\n8:00 - 17:00\n8:00 - 17:00\n8:00 - 17:00\nFermé"
-                                android:textSize="14sp"
+                                android:layout_marginBottom="5dp"
+                                android:gravity="right"
                                 android:lineSpacingExtra="10dp"
-                                android:textColor="@color/scheduleItem"
-                                android:gravity="right"/>
+                                android:text="8:00 - 17:00\n8:00 - 17:00\n8:00 - 17:00\n8:00 - 17:00\n8:00 - 17:00\nFermé"
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Fermé"
-                                android:textSize="14sp"
-                                android:textColor="@color/scheduleItemSelected"
+                                android:gravity="right"
                                 android:paddingBottom="10dp"
-                                android:gravity="right" />
+                                android:text="Fermé"
+                                android:textColor="@color/green"
+                                android:textSize="14sp" />
+
                         </LinearLayout>
 
                     </LinearLayout>
@@ -142,95 +151,102 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="72dp"
                 android:background="#EFEFEF" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:padding="5dp"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/ic_phone"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Téléphone"
-                        android:textSize="16sp"
-                        android:textColor="@color/blackMenuItem" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="+32 71 252 262"
-                        android:textSize="14sp"
-                        android:textColor="@color/scheduleItem"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="72dp"
+                android:layout_marginTop="@dimen/default_margin"
                 android:background="#EFEFEF" />
 
-            <LinearLayout
+            <!-- Other info -->
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:background="@android:color/white"
+                android:paddingLeft="@dimen/default_margin"
+                android:paddingTop="@dimen/default_margin">
 
                 <ImageView
+                    android:id="@+id/imageview_phone"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:padding="5dp"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/ic_address"
-                    android:tint="#1fbcd2"
-                    />
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:src="@drawable/ic_phone" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textview_phone_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingTop="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="16dp">
+                    android:layout_toRightOf="@+id/imageview_phone"
+                    android:text="Téléphone"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Adresse"
-                        android:textSize="16sp"
-                        android:textColor="@color/blackMenuItem" />
+                <TextView
+                    android:id="@+id/textview_phone_numbr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/textview_phone_title"
+                    android:layout_below="@id/textview_phone_title"
+                    android:text="+32 71 252 262"
+                    android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/textview_address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/scheduleItem"
-                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        android:textSize="14sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignLeft="@id/textview_phone_title"
+                    android:layout_below="@id/textview_phone_numbr"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:background="#EFEFEF" />
 
-                </LinearLayout>
+            </RelativeLayout>
 
-            </LinearLayout>
+            <!-- Address -->
 
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingBottom="@dimen/default_margin"
+                android:paddingLeft="@dimen/default_margin"
+                android:paddingTop="@dimen/default_margin">
+
+                <ImageView
+                    android:id="@+id/imageview_address"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:src="@drawable/ic_address" />
+
+                <TextView
+                    android:id="@+id/textview_address_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/imageview_address"
+                    android:text="Adresse"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textview_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/textview_address_title"
+                    android:layout_below="@id/textview_address_title"
+                    android:text="@string/Lorem"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EFEFEF" />
 
         </LinearLayout>
 

@@ -44,9 +44,9 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/nested_scroll_view"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -161,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/textview_phone_title"
                     android:layout_below="@id/textview_phone_title"
-                    android:text="0442 42 42 42" />
+                    android:text="+32 442 42 42 42" />
 
                 <View
                     android:id="@+id/view_phone_divider"
@@ -223,9 +223,9 @@
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
-        android:visibility="gone"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:layout_centerInParent="true"/>
+        android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

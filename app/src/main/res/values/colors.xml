@@ -10,10 +10,6 @@
     <color name="greySecondaryText" type="color">#787878</color>
     <color name="greyDivider">#EEEEEE</color>
 
-
-    <color name="greySectionHeader">#4a4a4a</color>
-    <color name="blackMenuItem">#de000000</color>
-    <color name="scheduleItem">#b7bbc0</color>
-    <color name="scheduleItemSelected">#7ed321</color>
+    <color name="green">#7ed321</color>
 
 </resources>

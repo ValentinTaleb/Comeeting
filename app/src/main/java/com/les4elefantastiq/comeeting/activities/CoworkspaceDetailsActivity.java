@@ -23,11 +23,14 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
     // -------------- Objects, Variables -------------- //
 
     public static final String EXTRA_COWORKSPACE_ID = "EXTRA_COWORKSPACE_ID";
-    public CoworkspaceAsyncTask mCoworkspaceAsyncTask;
+
+    private CoworkspaceAsyncTask mCoworkspaceAsyncTask;
+
 
     // -------------------- Views --------------------- //
 
     private ImageView imageView;
+
 
     // ------------------ LifeCycle ------------------- //
 
@@ -54,6 +57,7 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
         mCoworkspaceAsyncTask.execute();
     }
 
+
     // ------------------ Listeners ------------------- //
 
     // ------------------- Methods -------------------- //
@@ -74,11 +78,10 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
 
             if (coworkspace != null) {
                 ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar)).setTitle(coworkspace.name);
-                ((TextView) findViewById(R.id.textview_address)).setText(coworkspace.address + ", " + coworkspace.zipCode + "\n" + coworkspace.city + ", Belgique");
+                ((TextView) findViewById(R.id.textview_address)).setText(coworkspace.address + "\n" + coworkspace.zipCode + " " + coworkspace.city);
 
                 Picasso.with(getBaseContext())
                         .load(coworkspace.pictureUrl)
-                        .placeholder(R.drawable.user)
                         .into(imageView);
 
             } else
@@ -86,6 +89,7 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
         }
 
     }
+
 
     // ----------------- GUI Adapter ------------------ //
 
