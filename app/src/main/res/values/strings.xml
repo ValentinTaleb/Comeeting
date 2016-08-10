@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">Comeeting</string>
+    <string name="Lorem">Lorem</string>
+    <string name="Open">Ouvrir</string>
+    <string name="Close">Fermer</string>
+    <string name="Whoops_an_error_has_occured__Check_your_internet_connection">Oups, une erreur est survenue. Vérifiez votre connexion internet.</string>
+    <string name="Please_wait">Please wait …</string>
+
+</resources>

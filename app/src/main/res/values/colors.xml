@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#00bcd4</color>
+    <color name="colorPrimaryDark">#0096a6</color>
+    <color name="ColorPrimaryDarker">#007380</color>
+    <color name="colorAccent">#ffc107</color>
+    <color name="ColorPrimaryAlpha">#9900bcd4</color>
+
+    <color name="greySecondaryText" type="color">#787878</color>
+    <color name="greyDivider">#EEEEEE</color>
+
+
+    <color name="greySectionHeader">#4a4a4a</color>
+    <color name="blackMenuItem">#de000000</color>
+    <color name="scheduleItem">#b7bbc0</color>
+    <color name="scheduleItemSelected">#7ed321</color>
+
+</resources>
