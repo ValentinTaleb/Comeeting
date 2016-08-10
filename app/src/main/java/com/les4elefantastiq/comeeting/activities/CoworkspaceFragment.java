@@ -198,6 +198,7 @@ public class CoworkspaceFragment extends Fragment {
 
                     Picasso.with(getContext())
                             .load(coworker.pictureUrl)
+                            .placeholder(R.drawable.user)
                             .into(imageView);
 
                     imageView.setTag(coworker);
