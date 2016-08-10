@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
 
     defaultConfig {
-        applicationId "com.les4elefantastiq.les4elefantcowork"
+        applicationId "com.les4elefantastiq.comeeting"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1

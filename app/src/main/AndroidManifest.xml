@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.les4elefantastiq.les4elefantcowork">
+    package="com.les4elefantastiq.comeeting">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
