@@ -2,12 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/view_top_separator"
+        android:background="#EFEFEF" />
 
     <ImageView
         android:id="@+id/imageview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:layout_below="@+id/view_top_separator"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
@@ -90,11 +98,9 @@
         android:textColor="#4a4a4a" />
 
     <View
+        android:layout_below="@+id/textview_address"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/textview_address"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:background="@color/greyDivider" />
+        android:background="#EFEFEF" />
 
 </RelativeLayout>
