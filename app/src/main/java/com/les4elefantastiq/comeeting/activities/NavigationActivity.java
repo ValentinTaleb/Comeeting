@@ -179,18 +179,18 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
         Menu menu = mNavigationView.getMenu();
         
-        SubMenu currentSubMenu = menu.addSubMenu("Coworking actuel");
+        SubMenu currentSubMenu = menu.addSubMenu("Coworkspace actuel");
         if (currentCoworkspace != null) {
             // If currently in a coworkspace
             currentSubMenu.add(0, MENU_CURRENT_COWORKSPACE, 0, currentCoworkspace.name);
             mMenuIdCoworkspaceIdMap.put(MENU_CURRENT_COWORKSPACE, currentCoworkspace.id);
         } else {
             // If not in a coworkspace
-            currentSubMenu.add(0, MENU_NO_ACTION, 0, "Pas dans un coworking");
+            currentSubMenu.add(0, MENU_NO_ACTION, 0, "Pas dans un coworkspace");
         }
 
         // Fav
-        SubMenu favSubMenu = menu.addSubMenu("Coworking Favoris");
+        SubMenu favSubMenu = menu.addSubMenu("Coworkspaces Favoris");
 
         if (favoriteCoworkspace != null && favoriteCoworkspace.length > 0) {
             // If have some favorite(s) coworkspace
