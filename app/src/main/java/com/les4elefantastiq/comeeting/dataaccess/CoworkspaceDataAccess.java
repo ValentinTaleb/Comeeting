@@ -13,12 +13,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-/**
- * Created by Math on 05/08/16.
- */
 public class CoworkspaceDataAccess {
-    private static final String API_URL = "http://comeeting-api.azurewebsites.net";
-    private static Retrofit retrofit;
 
     public static List<Coworkspace> getAllCoworkspace() {
         Call<List<Coworkspace>> coworkspaces = CommonDataAccess.getRetrofit().create(CoworkspacesInterface.class).coworkspaces();
