@@ -1,7 +1,6 @@
 package com.les4elefantastiq.comeeting.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -22,11 +21,18 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
 public class CoworkersActivity extends BaseActivity {
 
     // -------------- Objects, Variables -------------- //
 
-    private CoworkersAsyncTask mCoworkersAsyncTask;
+    private Subscription mLoadCoworkersSubscription;
 
 
     // -------------------- Views --------------------- //
@@ -50,16 +56,19 @@ public class CoworkersActivity extends BaseActivity {
         mListView = (ListView) findViewById(R.id.listview);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        mCoworkersAsyncTask = new CoworkersAsyncTask();
-        mCoworkersAsyncTask.execute();
+        mProgressBar.setVisibility(View.VISIBLE);
+
+        String coworkspaceId = getIntent().getStringExtra(CoworkspaceFragment.EXTRA_COWORKSPACE_ID);
+
+        loadCoworkers(coworkspaceId);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mCoworkersAsyncTask != null)
-            mCoworkersAsyncTask.cancel(false);
+        if (mLoadCoworkersSubscription != null)
+            mLoadCoworkersSubscription.unsubscribe();
     }
 
 
@@ -67,20 +76,19 @@ public class CoworkersActivity extends BaseActivity {
 
     // ------------------- Methods -------------------- //
 
-    // ------------------ AsyncTasks ------------------ //
+    private void loadCoworkers(String coworkspaceId) {
+        mLoadCoworkersSubscription = Observable.just(coworkspaceId)
+                .map(mCoworkersObservable)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mCoworkersObserver);
+    }
 
-    private class CoworkersAsyncTask extends AsyncTask<Void, Void, List<Coworker>> {
+    private Func1<String, List<Coworker>> mCoworkersObservable = new Func1<String, List<Coworker>>() {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected List<Coworker> doInBackground(Void... voids) {
-            Coworkspace coworkspace = CoworkspacesManager.getCoworkspace(getIntent().getStringExtra(CoworkspaceFragment.EXTRA_COWORKSPACE_ID));
+        public List<Coworker> call(String coworkspaceId) {
+            Coworkspace coworkspace = CoworkspacesManager.getCoworkspace(coworkspaceId);
 
             if (coworkspace != null)
                 return CoworkspacesManager.getCoworkers(coworkspace);
@@ -88,19 +96,31 @@ public class CoworkersActivity extends BaseActivity {
                 return null;
         }
 
-        @Override
-        protected void onPostExecute(List<Coworker> coworkers) {
-            super.onPostExecute(coworkers);
+    };
 
+    private Observer<List<Coworker>> mCoworkersObserver = new Observer<List<Coworker>>() {
+
+        @Override
+        public void onCompleted() {
             mProgressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(CoworkersActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onNext(List<Coworker> coworkers) {
 
             if (coworkers != null)
                 mListView.setAdapter(new Adapter(coworkers));
             else
                 Toast.makeText(CoworkersActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+
         }
 
-    }
+    };
 
 
     // ----------------- GUI Adapter ------------------ //
@@ -151,10 +171,10 @@ public class CoworkersActivity extends BaseActivity {
             } else
                 objectsHolder = (ObjectsHolder) convertView.getTag();
 
-                Picasso.with(getBaseContext())
-                        .load(coworker.pictureUrl)
-                        .placeholder(R.drawable.user)
-                        .into(objectsHolder.imageView);
+            Picasso.with(getBaseContext())
+                    .load(coworker.pictureUrl)
+                    .placeholder(R.drawable.user)
+                    .into(objectsHolder.imageView);
 
             objectsHolder.textView_Name.setText(coworker.firstName + " " + coworker.lastName);
             objectsHolder.textView_Description.setText(coworker.headline);
@@ -178,7 +198,5 @@ public class CoworkersActivity extends BaseActivity {
 
     }
 
-
-    // --------------------- Menu --------------------- //
 
 }
