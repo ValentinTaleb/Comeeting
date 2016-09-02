@@ -67,7 +67,7 @@ public class CoworkersActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mLoadCoworkersSubscription != null)
+        if (mLoadCoworkersSubscription != null && !mLoadCoworkersSubscription.isUnsubscribed())
             mLoadCoworkersSubscription.unsubscribe();
     }
 
@@ -117,7 +117,6 @@ public class CoworkersActivity extends BaseActivity {
                 mListView.setAdapter(new Adapter(coworkers));
             else
                 Toast.makeText(CoworkersActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
-
         }
 
     };
