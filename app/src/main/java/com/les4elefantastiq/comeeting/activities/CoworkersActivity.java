@@ -84,18 +84,13 @@ public class CoworkersActivity extends BaseActivity {
                 .subscribe(mCoworkersObserver);
     }
 
-    private Func1<String, List<Coworker>> mCoworkersObservable = new Func1<String, List<Coworker>>() {
+    private Func1<String, List<Coworker>> mCoworkersObservable = coworkspaceId -> {
+        Coworkspace coworkspace = CoworkspacesManager.getCoworkspace(coworkspaceId);
 
-        @Override
-        public List<Coworker> call(String coworkspaceId) {
-            Coworkspace coworkspace = CoworkspacesManager.getCoworkspace(coworkspaceId);
-
-            if (coworkspace != null)
-                return CoworkspacesManager.getCoworkers(coworkspace);
-            else
-                return null;
-        }
-
+        if (coworkspace != null)
+            return CoworkspacesManager.getCoworkers(coworkspace);
+        else
+            return null;
     };
 
     private Observer<List<Coworker>> mCoworkersObserver = new Observer<List<Coworker>>() {
