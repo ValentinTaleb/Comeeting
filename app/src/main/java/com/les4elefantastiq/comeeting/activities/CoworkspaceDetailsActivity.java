@@ -1,7 +1,6 @@
 package com.les4elefantastiq.comeeting.activities;
 
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,9 +13,14 @@ import android.widget.Toast;
 
 import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
-import com.les4elefantastiq.comeeting.managers.CoworkspacesManager;
+import com.les4elefantastiq.comeeting.managers.CoworkspaceManager;
 import com.les4elefantastiq.comeeting.models.Coworkspace;
 import com.squareup.picasso.Picasso;
+
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class CoworkspaceDetailsActivity extends BaseActivity {
 
@@ -24,12 +28,12 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
 
     public static final String EXTRA_COWORKSPACE_ID = "EXTRA_COWORKSPACE_ID";
 
-    private CoworkspaceAsyncTask mCoworkspaceAsyncTask;
+    private Subscription mCoworkspaceSubscription;
 
 
     // -------------------- Views --------------------- //
 
-    private ImageView imageView;
+    private ImageView mImageView;
 
 
     // ------------------ LifeCycle ------------------- //
@@ -51,30 +55,43 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Coworkspace");
 
-        imageView = (ImageView) findViewById(R.id.imageview);
+        mImageView = (ImageView) findViewById(R.id.imageview);
 
-        mCoworkspaceAsyncTask = new CoworkspaceAsyncTask();
-        mCoworkspaceAsyncTask.execute();
+        String coworkspaceId = getIntent().getStringExtra(EXTRA_COWORKSPACE_ID);
+        loadCoworkspace(coworkspaceId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mCoworkspaceSubscription != null && !mCoworkspaceSubscription.isUnsubscribed())
+            mCoworkspaceSubscription.unsubscribe();
     }
 
 
-    // ------------------ Listeners ------------------- //
-
     // ------------------- Methods -------------------- //
 
-    // ------------------ AsyncTasks ------------------ //
+    private void loadCoworkspace(String coworkspaceId) {
+        mCoworkspaceSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mCoworkspaceOserver);
+    }
 
-    private class CoworkspaceAsyncTask extends AsyncTask<Void, Void, Coworkspace> {
+    private Observer<Coworkspace> mCoworkspaceOserver = new Observer<Coworkspace>() {
 
         @Override
-        protected Coworkspace doInBackground(Void... voids) {
-            return CoworkspacesManager.getCoworkspace(getIntent().getStringExtra(EXTRA_COWORKSPACE_ID));
+        public void onCompleted() {
         }
 
-        @SuppressWarnings("ConstantConditions")
         @Override
-        protected void onPostExecute(Coworkspace coworkspace) {
-            super.onPostExecute(coworkspace);
+        public void onError(Throwable e) {
+            Toast.makeText(CoworkspaceDetailsActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onNext(Coworkspace coworkspace) {
 
             if (coworkspace != null) {
                 ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar)).setTitle(coworkspace.name);
@@ -82,17 +99,12 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
 
                 Picasso.with(getBaseContext())
                         .load(coworkspace.pictureUrl)
-                        .into(imageView);
+                        .into(mImageView);
 
             } else
                 Toast.makeText(CoworkspaceDetailsActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
         }
 
-    }
-
-
-    // ----------------- GUI Adapter ------------------ //
-
-    // --------------------- Menu --------------------- //
+    };
 
 }

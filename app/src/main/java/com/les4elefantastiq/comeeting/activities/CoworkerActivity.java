@@ -1,8 +1,6 @@
 package com.les4elefantastiq.comeeting.activities;
 
-import android.app.Activity;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +11,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,17 +18,20 @@ import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
 import com.les4elefantastiq.comeeting.managers.CoworkerManager;
 import com.les4elefantastiq.comeeting.models.Coworker;
-import com.linkedin.platform.DeepLinkHelper;
 import com.squareup.picasso.Picasso;
 
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-public class CoworkerActivity extends BaseActivity implements View.OnClickListener {
+public class CoworkerActivity extends BaseActivity {
 
     // -------------- Objects, Variables -------------- //
 
     public static final String EXTRA_COWORKER_ID = "EXTRA_COWORKER_ID";
 
-    public CoworkerAsyncTask mCoworkerAsyncTask;
+    private Subscription mLoadCoworkerSubscription;
 
 
     // -------------------- Views --------------------- //
@@ -39,7 +39,6 @@ public class CoworkerActivity extends BaseActivity implements View.OnClickListen
     private ImageView mImageView;
     private ProgressBar mProgressBar;
     private NestedScrollView mNestedScrollView;
-    private RelativeLayout linkedInView;
 
 
     // ------------------ LifeCycle ------------------- //
@@ -65,90 +64,57 @@ public class CoworkerActivity extends BaseActivity implements View.OnClickListen
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mNestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
 
-        mCoworkerAsyncTask = new CoworkerAsyncTask();
-        mCoworkerAsyncTask.execute();
+        String coworkerId = getIntent().getStringExtra(EXTRA_COWORKER_ID);
 
-        linkedInView = (RelativeLayout) findViewById(R.id.layout_linked_in);
-        linkedInView.setOnClickListener(this);
+        loadCoworker(coworkerId);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mCoworkerAsyncTask != null)
-            mCoworkerAsyncTask.cancel(false);
+        if (mLoadCoworkerSubscription != null && !mLoadCoworkerSubscription.isUnsubscribed())
+            mLoadCoworkerSubscription.unsubscribe();
     }
 
-
-    // ------------------ Listeners ------------------- //
-
-    @Override
-    public void onClick(View view) {
-        final Activity thisActivity = this;
-
-        /*
-        DeepLinkHelper deepLinkHelper = DeepLinkHelper.getInstance();
-
-        // Open the current user's profile
-        deepLinkHelper.openCurrentProfile(thisActivity, new DeeplinkListener() {
-            @Override
-            public void onDeepLinkSuccess() {
-                // Successfully sent user to LinkedIn app
-            }
-
-            @Override
-            public void onDeepLinkError(LiDeepLinkError error) {
-                // Error sending user to LinkedIn app
-            }
-        });
-        */
-    }
 
     // ------------------- Methods -------------------- //
 
-    // ------------------ AsyncTasks ------------------ //
+    private void loadCoworker(String coworkerId) {
+        mNestedScrollView.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
 
-    private class CoworkerAsyncTask extends AsyncTask<Void, Void, Coworker> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mNestedScrollView.setVisibility(View.GONE);
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Coworker doInBackground(Void... voids) {
-            return CoworkerManager.getCoworker(getIntent().getStringExtra(EXTRA_COWORKER_ID));
-        }
-
-        @SuppressWarnings("ConstantConditions")
-        @Override
-        protected void onPostExecute(Coworker coworker) {
-            super.onPostExecute(coworker);
-
-            mProgressBar.setVisibility(View.GONE);
-            mNestedScrollView.setVisibility(View.VISIBLE);
-
-            if (coworker != null) {
-                ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar)).setTitle(coworker.firstName + " " + coworker.lastName);
-                ((TextView) findViewById(R.id.textview_summary)).setText(coworker.summary);
-                ((TextView) findViewById(R.id.textview_linked_in_title)).setText("Profil LinkedIn de " + coworker.firstName);
-
-                Picasso.with(getBaseContext())
-                        .load(coworker.pictureUrl)
-                        .into(mImageView);
-
-            } else
-                Toast.makeText(CoworkerActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
-        }
-
+        mLoadCoworkerSubscription = CoworkerManager.getCoworker((coworkerId))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mCoworkerObserver);
     }
 
+    private Observer<Coworker> mCoworkerObserver = new Observer<Coworker>() {
 
-    // ----------------- GUI Adapter ------------------ //
+        @Override
+        public void onCompleted() {
+            mProgressBar.setVisibility(View.GONE);
+            mNestedScrollView.setVisibility(View.VISIBLE);
+        }
 
-    // --------------------- Menu --------------------- //
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(CoworkerActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onNext(Coworker coworker) {
+            ((CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar)).setTitle(coworker.firstName + " " + coworker.lastName);
+            ((TextView) findViewById(R.id.textview_summary)).setText(coworker.summary);
+            ((TextView) findViewById(R.id.textview_linked_in_title)).setText("Profil LinkedIn de " + coworker.firstName);
+
+            Picasso.with(getBaseContext())
+                    .load(coworker.pictureUrl)
+                    .into(mImageView);
+        }
+
+    };
 
 }

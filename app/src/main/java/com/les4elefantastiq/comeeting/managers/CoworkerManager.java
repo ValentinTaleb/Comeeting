@@ -1,10 +1,11 @@
 package com.les4elefantastiq.comeeting.managers;
 
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
+import android.support.annotation.NonNull;
 
 import com.les4elefantastiq.comeeting.dataaccess.CoworkerDataAccess;
 import com.les4elefantastiq.comeeting.models.Coworker;
+
+import rx.Observable;
 
 public class CoworkerManager {
 
@@ -14,15 +15,13 @@ public class CoworkerManager {
 
     // ---------------- Public Methods ---------------- //
 
-    @Nullable
-    @WorkerThread
-    public static Coworker getCoworker(String linkedInId) {
+    @NonNull
+    public static Observable<Coworker> getCoworker(String linkedInId) {
         return CoworkerDataAccess.getCoworker(linkedInId);
     }
 
-    @Nullable
-    @WorkerThread
-    public static boolean login(Coworker coworker) {
+    @NonNull
+    public static Observable<Void> Login(Coworker coworker) {
         return CoworkerDataAccess.login(coworker);
     }
 

@@ -14,18 +14,15 @@ import android.widget.Toast;
 
 import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
-import com.les4elefantastiq.comeeting.managers.CoworkspacesManager;
+import com.les4elefantastiq.comeeting.managers.CoworkspaceManager;
 import com.les4elefantastiq.comeeting.models.Coworker;
-import com.les4elefantastiq.comeeting.models.Coworkspace;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class CoworkersActivity extends BaseActivity {
@@ -54,8 +51,8 @@ public class CoworkersActivity extends BaseActivity {
         getSupportActionBar().setTitle("Coworkers");
 
         mListView = (ListView) findViewById(R.id.listview);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.VISIBLE);
 
         String coworkspaceId = getIntent().getStringExtra(CoworkspaceFragment.EXTRA_COWORKSPACE_ID);
@@ -72,26 +69,15 @@ public class CoworkersActivity extends BaseActivity {
     }
 
 
-    // ------------------ Listeners ------------------- //
-
     // ------------------- Methods -------------------- //
 
     private void loadCoworkers(String coworkspaceId) {
-        mLoadCoworkersSubscription = Observable.just(coworkspaceId)
-                .map(mCoworkersObservable)
+        mLoadCoworkersSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
+                .flatMap(CoworkspaceManager::getCoworkers)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mCoworkersObserver);
     }
-
-    private Func1<String, List<Coworker>> mCoworkersObservable = coworkspaceId -> {
-        Coworkspace coworkspace = CoworkspacesManager.getCoworkspace(coworkspaceId);
-
-        if (coworkspace != null)
-            return CoworkspacesManager.getCoworkers(coworkspace);
-        else
-            return null;
-    };
 
     private Observer<List<Coworker>> mCoworkersObserver = new Observer<List<Coworker>>() {
 
@@ -103,6 +89,7 @@ public class CoworkersActivity extends BaseActivity {
         @Override
         public void onError(Throwable e) {
             Toast.makeText(CoworkersActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         @Override

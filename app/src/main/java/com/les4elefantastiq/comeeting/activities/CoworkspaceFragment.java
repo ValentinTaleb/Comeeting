@@ -1,7 +1,6 @@
 package com.les4elefantastiq.comeeting.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,7 +20,7 @@ import android.widget.Toast;
 
 import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
-import com.les4elefantastiq.comeeting.managers.CoworkspacesManager;
+import com.les4elefantastiq.comeeting.managers.CoworkspaceManager;
 import com.les4elefantastiq.comeeting.managers.LivefeedManager;
 import com.les4elefantastiq.comeeting.models.Coworker;
 import com.les4elefantastiq.comeeting.models.Coworkspace;
@@ -34,13 +33,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class CoworkspaceFragment extends Fragment {
 
     // -------------- Objects, Variables -------------- //
 
     public static final String EXTRA_COWORKSPACE_ID = "EXTRA_COWORKSPACE_ID";
 
-    private LiveFeedMessagesAsyncTask mLiveFeedmessagesAsyncTaks;
+    private Subscription mLiveFeedMessagesSubscription;
 
     private Coworkspace mCoworkspace;
 
@@ -65,9 +69,10 @@ public class CoworkspaceFragment extends Fragment {
 
         mListView = (ListView) view.findViewById(R.id.listview);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.VISIBLE);
 
-        mLiveFeedmessagesAsyncTaks = new LiveFeedMessagesAsyncTask();
-        mLiveFeedmessagesAsyncTaks.execute();
+        String coworkspaceId = getArguments().getString(EXTRA_COWORKSPACE_ID);
+        loadLiveFeedMessages(coworkspaceId);
 
         return view;
     }
@@ -76,43 +81,36 @@ public class CoworkspaceFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        if (mLiveFeedmessagesAsyncTaks != null)
-            mLiveFeedmessagesAsyncTaks.cancel(false);
+        if (mLiveFeedMessagesSubscription != null && !mLiveFeedMessagesSubscription.isUnsubscribed())
+            mLiveFeedMessagesSubscription.unsubscribe();
     }
 
 
-    // ------------------ Listeners ------------------- //
-
     // ------------------- Methods -------------------- //
 
-    // ------------------ AsyncTasks ------------------ //
+    private void loadLiveFeedMessages(String coworkspaceId) {
+        mLiveFeedMessagesSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
+                .flatMap(LivefeedManager::getLiveFeedMessages)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mLiveFeedMessageObserver);
+    }
 
-    private class LiveFeedMessagesAsyncTask extends AsyncTask<Void, Void, List<LiveFeedMessage>> {
+    private Observer<List<LiveFeedMessage>> mLiveFeedMessageObserver = new Observer<List<LiveFeedMessage>>() {
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected List<LiveFeedMessage> doInBackground(Void... voids) {
-            mCoworkspace = CoworkspacesManager.getCoworkspace(getArguments().getString(EXTRA_COWORKSPACE_ID));
-
-            if (mCoworkspace != null)
-                return LivefeedManager.getLiveFeedMessages(mCoworkspace);
-            else
-                return null;
-        }
-
-        @SuppressWarnings("ConstantConditions")
-        @Override
-        protected void onPostExecute(List<LiveFeedMessage> liveFeedMessages) {
-            super.onPostExecute(liveFeedMessages);
-
+        public void onCompleted() {
             mProgressBar.setVisibility(View.GONE);
+        }
 
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(getActivity(), R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onNext(List<LiveFeedMessage> liveFeedMessages) {
             ((BaseActivity) getActivity()).getSupportActionBar().setTitle(mCoworkspace.name);
 
             if (liveFeedMessages != null)
@@ -121,7 +119,7 @@ public class CoworkspaceFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
         }
 
-    }
+    };
 
 
     // ----------------- GUI Adapter ------------------ //
@@ -203,18 +201,15 @@ public class CoworkspaceFragment extends Fragment {
 
                     imageView.setTag(coworker);
 
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Coworker coworker = (Coworker) view.getTag();
-                            startActivity(new Intent(getActivity(), CoworkerActivity.class).putExtra(CoworkerActivity.EXTRA_COWORKER_ID, coworker.linkedInId));
-                        }
+                    imageView.setOnClickListener(view -> {
+                        Coworker coworker1 = (Coworker) view.getTag();
+                        startActivity(new Intent(getActivity(), CoworkerActivity.class).putExtra(CoworkerActivity.EXTRA_COWORKER_ID, coworker1.linkedInId));
                     });
 
                 }
             }
 
-            convertView.findViewById(R.id.textview_see_more).setOnClickListener(onSeeMoreCowerkerClickListener);
+            convertView.findViewById(R.id.textview_see_more).setOnClickListener(onSeeMoreCoworkersClickListener);
 
             return convertView;
         }
@@ -294,14 +289,7 @@ public class CoworkspaceFragment extends Fragment {
             return convertView;
         }
 
-        private View.OnClickListener onSeeMoreCowerkerClickListener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), CoworkersActivity.class).putExtra(EXTRA_COWORKSPACE_ID, getArguments().getString(EXTRA_COWORKSPACE_ID)));
-            }
-
-        };
+        private View.OnClickListener onSeeMoreCoworkersClickListener = view -> startActivity(new Intent(getActivity(), CoworkersActivity.class).putExtra(EXTRA_COWORKSPACE_ID, getArguments().getString(EXTRA_COWORKSPACE_ID)));
 
     }
 

@@ -8,10 +8,6 @@ import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
 
 public class CoworkspaceActivity extends BaseActivity {
 
-    // -------------- Objects, Variables -------------- //
-
-    // -------------------- Views --------------------- //
-
     // ------------------ LifeCycle ------------------- //
 
     @SuppressWarnings("ConstantConditions")
@@ -34,16 +30,5 @@ public class CoworkspaceActivity extends BaseActivity {
         // Display the fragment
         getSupportFragmentManager().beginTransaction().add(R.id.layout_content, coworkspaceFragment).commit();
     }
-
-
-    // ------------------ Listeners ------------------- //
-
-    // ------------------- Methods -------------------- //
-
-    // ------------------ AsyncTasks ------------------ //
-
-    // ----------------- GUI Adapter ------------------ //
-
-    // --------------------- Menu --------------------- //
 
 }

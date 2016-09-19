@@ -1,7 +1,6 @@
 package com.les4elefantastiq.comeeting.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,17 +16,22 @@ import android.widget.Toast;
 
 import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
-import com.les4elefantastiq.comeeting.managers.CoworkspacesManager;
+import com.les4elefantastiq.comeeting.managers.CoworkspaceManager;
 import com.les4elefantastiq.comeeting.models.Coworkspace;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class CoworkspacesFragment extends Fragment {
 
     // -------------- Objects, Variables -------------- //
 
-    private CoworkspacesAsyncTask mCoworkspacesAsyncTask;
+    private Subscription mCoworkspacesSubscription;
 
 
     // -------------------- Views --------------------- //
@@ -44,15 +48,15 @@ public class CoworkspacesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.coworkspaces_fragment, container, false);
 
-        ((BaseActivity) getActivity()).getSupportActionBar().setTitle("Tous les coworkspaces");
+        ((BaseActivity) getActivity()).getSupportActionBar().setTitle(R.string.All_coworkspaces);
 
         mListView = (ListView) view.findViewById(R.id.listview);
         mListView.addHeaderView(getActivity().getLayoutInflater().inflate(R.layout.coworkspaces_activity_header, null));
 
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.VISIBLE);
 
-        mCoworkspacesAsyncTask = new CoworkspacesAsyncTask();
-        mCoworkspacesAsyncTask.execute();
+        loadCoworkspaces();
 
         return view;
     }
@@ -61,44 +65,42 @@ public class CoworkspacesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        if (mCoworkspacesAsyncTask != null)
-            mCoworkspacesAsyncTask.cancel(false);
+        if (mCoworkspacesSubscription != null && !mCoworkspacesSubscription.isUnsubscribed())
+            mCoworkspacesSubscription.unsubscribe();
     }
 
 
-    // ------------------ Listeners ------------------- //
-
     // ------------------- Methods -------------------- //
 
-    // ------------------ AsyncTasks ------------------ //
+    private void loadCoworkspaces() {
+        CoworkspaceManager.getCoworkspaces()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mCoworkspacesObserver);
+    }
 
-    private class CoworkspacesAsyncTask extends AsyncTask<Void, Void, List<Coworkspace>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
+    private Observer<List<Coworkspace>> mCoworkspacesObserver = new Observer<List<Coworkspace>>() {
 
         @Override
-        protected List<Coworkspace> doInBackground(Void... voids) {
-            return CoworkspacesManager.getCoworkspaces();
-        }
-
-        @Override
-        protected void onPostExecute(List<Coworkspace> coworkspaces) {
-            super.onPostExecute(coworkspaces);
-
+        public void onCompleted() {
             mProgressBar.setVisibility(View.GONE);
+        }
 
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(getActivity(), R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onNext(List<Coworkspace> coworkspaces) {
             if (coworkspaces != null)
                 mListView.setAdapter(new Adapter(coworkspaces));
             else
                 Toast.makeText(getActivity(), R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
         }
 
-    }
+    };
 
 
     // ----------------- GUI Adapter ------------------ //
@@ -184,8 +186,5 @@ public class CoworkspacesFragment extends Fragment {
         };
 
     }
-
-
-    // --------------------- Menu --------------------- //
 
 }

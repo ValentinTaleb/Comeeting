@@ -35,7 +35,7 @@ public class ProfileManager {
         loadCoworker(context);
 
         if (mCoworker != null && mCoworker.currentCoworkspaceId != null)
-            return CoworkspacesManager.getCoworkspace(mCoworker.currentCoworkspaceId);
+            return CoworkspaceManager.getCoworkspace(mCoworker.currentCoworkspaceId);
         else
             return null;
     }
@@ -51,7 +51,7 @@ public class ProfileManager {
             if (mCoworker != null && mCoworker.favoriteCoworkspacesId != null) {
                 Coworkspace[] favoriteCoworkspaces = new Coworkspace[mCoworker.favoriteCoworkspacesId.size()];
 
-                List<Coworkspace> coworkspaces = CoworkspacesManager.getCoworkspaces();
+                List<Coworkspace> coworkspaces = CoworkspaceManager.getCoworkspaces();
 
                 if (coworkspaces != null)
                     for (int i = 0; i < favoriteCoworkspacesId.size(); i++) {

@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
-import com.les4elefantastiq.comeeting.managers.CoworkspacesManager;
 import com.les4elefantastiq.comeeting.managers.ProfileManager;
 import com.les4elefantastiq.comeeting.managers.SharedPreferencesManager;
 import com.les4elefantastiq.comeeting.models.Coworker;
@@ -29,12 +28,20 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import rx.Subscription;
 
 public class NavigationActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // -------------- Objects, Variables -------------- //
 
-    private CurrentCoworkspaceAsynctask mCurrentCoworkspaceAsynctask;
+    private static final int MENU_CURRENT_COWORKSPACE = 1;
+    private static final int MENU_MORE_COWORKSPACE = 2;
+    private static final int MENU_SPECIFIC_COWORKSPACE = 3;
+    private static final int MENU_NO_ACTION = 4;
+
+    private Subscription mCurrentCoworkspacesSubscription;
+
+    private HashMap<MenuItem, Coworkspace> mMenuItemCoworkspaceMap;
 
 
     // -------------------- Views --------------------- //
@@ -67,8 +74,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
             manageNavigationDrawer();
 
-            mCurrentCoworkspaceAsynctask = new CurrentCoworkspaceAsynctask();
-            mCurrentCoworkspaceAsynctask.execute();
+            loadCurrentCoworkspaces();
         } else {
             startActivity(new Intent(NavigationActivity.this, SignInActivity.class));
             finish();
@@ -85,14 +91,13 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mCurrentCoworkspaceAsynctask != null)
-            mCurrentCoworkspaceAsynctask.cancel(false);
+        if (mCurrentCoworkspacesSubscription != null && !mCurrentCoworkspacesSubscription.isUnsubscribed())
+            mCurrentCoworkspacesSubscription.unsubscribe();
     }
 
 
     // ------------------ Listeners ------------------- //
 
-    private HashMap<Integer, String> mMenuIdCoworkspaceIdMap;
 
     @Override
     public void onBackPressed() {
@@ -117,7 +122,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
                 fragment = new CoworkspaceFragment();
 
                 // Pass the CoworkspaceId to the Fragment
-                bundle.putString(CoworkspaceFragment.EXTRA_COWORKSPACE_ID, mMenuIdCoworkspaceIdMap.get(MENU_CURRENT_COWORKSPACE));
+                bundle.putString(CoworkspaceFragment.EXTRA_COWORKSPACE_ID, mMenuItemCoworkspaceMap.get(menuItem).id);
                 fragment.setArguments(bundle);
                 break;
 
@@ -129,7 +134,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
                 fragment = new CoworkspaceFragment();
 
                 // Pass the CoworkspaceId to the Fragment
-                Coworkspace selectedCoworkspace = CoworkspacesManager.getCoworkspaceWithName(menuItem.getTitle().toString());
+                Coworkspace selectedCoworkspace = mMenuItemCoworkspaceMap.get(menuItem);
                 if (selectedCoworkspace != null) {
                     bundle.putString(CoworkspaceFragment.EXTRA_COWORKSPACE_ID, selectedCoworkspace.id);
                     fragment.setArguments(bundle);
@@ -148,10 +153,10 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
     // ------------------- Methods -------------------- //
 
-    private static final int MENU_CURRENT_COWORKSPACE = 1;
-    private static final int MENU_MORE_COWORKSPACE = 2;
-    private static final int MENU_SPECIFIC_COWORKSPACE = 3;
-    private static final int MENU_NO_ACTION = 4;
+
+    private void loadCurrentCoworkspaces() {
+        mCurrentCoworkspacesSubscription
+    }
 
     private void manageNavigationDrawer() {
         // Manage DrawerLayout and his toggle
@@ -175,15 +180,15 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
     }
 
     private void manageNavigationDrawerMenu(Coworkspace currentCoworkspace, Coworkspace[] favoriteCoworkspace) {
-        mMenuIdCoworkspaceIdMap = new HashMap<>();
+        mMenuItemCoworkspaceMap = new HashMap<>();
 
         Menu menu = mNavigationView.getMenu();
-        
+
         SubMenu currentSubMenu = menu.addSubMenu("Coworkspace actuel");
         if (currentCoworkspace != null) {
             // If currently in a coworkspace
-            currentSubMenu.add(0, MENU_CURRENT_COWORKSPACE, 0, currentCoworkspace.name);
-            mMenuIdCoworkspaceIdMap.put(MENU_CURRENT_COWORKSPACE, currentCoworkspace.id);
+            MenuItem menuCurrentCoworkspace = currentSubMenu.add(0, MENU_CURRENT_COWORKSPACE, 0, currentCoworkspace.name);
+            mMenuItemCoworkspaceMap.put(menuCurrentCoworkspace, currentCoworkspace);
         } else {
             // If not in a coworkspace
             currentSubMenu.add(0, MENU_NO_ACTION, 0, "Pas dans un coworkspace");
@@ -195,7 +200,8 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         if (favoriteCoworkspace != null && favoriteCoworkspace.length > 0) {
             // If have some favorite(s) coworkspace
             for (Coworkspace coworkspace : favoriteCoworkspace) {
-                favSubMenu.add(0, MENU_SPECIFIC_COWORKSPACE, 0, coworkspace.name);
+                MenuItem menuCoworkspace = favSubMenu.add(0, MENU_SPECIFIC_COWORKSPACE, 0, coworkspace.name);
+                mMenuItemCoworkspaceMap.put(menuCoworkspace, coworkspace);
             }
         } else {
             // If don't have favorite(s) coworkspace
@@ -217,7 +223,9 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
     private void loadProfile() {
         Coworker coworkerProfile = SharedPreferencesManager.getProfile(this);
-        if (coworkerProfile == null) { return; }
+        if (coworkerProfile == null) {
+            return;
+        }
 
         View navigationViewHeader = mNavigationView.getHeaderView(0);
 
@@ -230,6 +238,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         TextView emailTextView = (TextView) navigationViewHeader.findViewById(R.id.textView_Email);
         emailTextView.setText(coworkerProfile.headline);
     }
+
 
     // ------------------ AsyncTasks ------------------ //
 
@@ -248,7 +257,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         protected Coworkspace[][] doInBackground(Void... voids) {
             Coworkspace[][] coworkspaces =
                     {{ProfileManager.getCurrentCowerkspace(NavigationActivity.this)},
-                        ProfileManager.getFavoriteCowerkspaces(NavigationActivity.this)};
+                            ProfileManager.getFavoriteCowerkspaces(NavigationActivity.this)};
 
             return coworkspaces;
         }
@@ -279,8 +288,6 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         }
     }
 
-
-    // ----------------- GUI Adapter ------------------ //
 
     // --------------------- Menu --------------------- //
 

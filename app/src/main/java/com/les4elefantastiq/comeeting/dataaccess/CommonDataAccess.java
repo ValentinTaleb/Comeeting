@@ -1,5 +1,7 @@
 package com.les4elefantastiq.comeeting.dataaccess;
 
+import android.support.annotation.NonNull;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -14,6 +16,7 @@ public class CommonDataAccess {
 
     // ---------------- Public Methods ---------------- //
 
+    @NonNull
     public static Retrofit getRetrofit() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
@@ -24,8 +27,5 @@ public class CommonDataAccess {
 
         return retrofit;
     }
-
-
-    // ---------------- Private Methods --------------- //
 
 }

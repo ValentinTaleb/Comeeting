@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.les4elefantastiq.comeeting.models.Coworker;
 
-/**
- * Created by Math on 06/08/16.
- */
 public class SharedPreferencesManager {
 
     private static final String LINKEDINID = "LINKEDINID";
@@ -17,7 +14,7 @@ public class SharedPreferencesManager {
     public static void setLinkedInId(Context context, String linkedInId) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString(LINKEDINID, linkedInId);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getLinkedInId(Context context) {
@@ -27,7 +24,7 @@ public class SharedPreferencesManager {
     public static void saveProfile(Context context, Coworker coworker) {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
         editor.putString(PROFILE, new Gson().toJson(coworker));
-        editor.commit();
+        editor.apply();
     }
 
     public static Coworker getProfile(Context context) {
@@ -38,8 +35,8 @@ public class SharedPreferencesManager {
         return null;
     }
 
-
     private static SharedPreferences getSharedPreferences(Context context) {
         return context.getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
     }
+
 }
