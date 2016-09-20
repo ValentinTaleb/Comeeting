@@ -2,7 +2,6 @@ package com.les4elefantastiq.comeeting.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,13 +25,21 @@ import com.linkedin.platform.listeners.ApiResponse;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
 
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class SignInActivity extends BaseActivity implements View.OnClickListener, ApiListener, AuthListener {
 
     // -------------- Objects, Variables -------------- //
 
-    private ProgressDialog progressDialog;
+    private Subscription loginSubscription;
+
 
     // -------------------- Views --------------------- //
+
+    private ProgressDialog progressDialog;
+
 
     // ------------------ LifeCycle ------------------- //
 
@@ -60,6 +67,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (loginSubscription != null && !loginSubscription.isUnsubscribed())
+            loginSubscription.unsubscribe();
     }
 
 
@@ -73,8 +83,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onApiSuccess(ApiResponse apiResponse) {
-        // Login coworker
-        new LoginAsyncTask().execute(apiResponse);
+        login(apiResponse);
     }
 
     @Override
@@ -116,33 +125,47 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         finish();
     }
 
+
     // ------------------ AsyncTasks ------------------ //
 
-    private class LoginAsyncTask extends AsyncTask<ApiResponse, Void, Boolean> {
+    private void login(ApiResponse apiResponse) {
+        LinkedInCoworker linkedInCoworker = new Gson().fromJson(apiResponse.getResponseDataAsString(), LinkedInCoworker.class);
+        SharedPreferencesManager.setLinkedInId(SignInActivity.this, linkedInCoworker.linkedInId);
+        SharedPreferencesManager.saveProfile(SignInActivity.this, linkedInCoworker.getCoworker());
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Boolean doInBackground(ApiResponse... apiResponses) {
-            LinkedInCoworker linkedInCoworker = new Gson().fromJson(apiResponses[0].getResponseDataAsString(), LinkedInCoworker.class);
-            SharedPreferencesManager.setLinkedInId(SignInActivity.this, linkedInCoworker.linkedInId);
-            SharedPreferencesManager.saveProfile(SignInActivity.this, linkedInCoworker.getCoworker());
-            Boolean success = CoworkerManager.login(linkedInCoworker.getCoworker());
-
-            return success;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            super.onPostExecute(success);
-            progressDialog.dismiss();
-
-            if (success) {
-                showNavigationActivity();
-            }
-        }
+        loginSubscription = CoworkerManager.login(linkedInCoworker.getCoworker())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
+
+
+//    private class LoginAsyncTask extends AsyncTask<ApiResponse, Void, Boolean> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected Boolean doInBackground(ApiResponse... apiResponses) {
+//            LinkedInCoworker linkedInCoworker = new Gson().fromJson(apiResponses[0].getResponseDataAsString(), LinkedInCoworker.class);
+//            SharedPreferencesManager.setLinkedInId(SignInActivity.this, linkedInCoworker.linkedInId);
+//            SharedPreferencesManager.saveProfile(SignInActivity.this, linkedInCoworker.getCoworker());
+//            Boolean success = CoworkerManager.login(linkedInCoworker.getCoworker());
+//
+//            return success;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Boolean success) {
+//            super.onPostExecute(success);
+//            progressDialog.dismiss();
+//
+//            if (success) {
+//                showNavigationActivity();
+//            }
+//        }
+//    }
+
 }

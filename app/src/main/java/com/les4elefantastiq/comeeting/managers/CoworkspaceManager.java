@@ -14,9 +14,6 @@ import rx.Observable;
 
 public class CoworkspaceManager {
 
-    // -------------- Objects, Variables -------------- //
-
-
     // ---------------- Public Methods ---------------- //
 
     @NonNull

@@ -21,7 +21,7 @@ public class CoworkerManager {
     }
 
     @NonNull
-    public static Observable<Void> Login(Coworker coworker) {
+    public static Observable<Void> login(Coworker coworker) {
         return CoworkerDataAccess.login(coworker);
     }
 
