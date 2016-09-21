@@ -73,7 +73,7 @@ public class CoworkspacesFragment extends Fragment {
     // ------------------- Methods -------------------- //
 
     private void loadCoworkspaces() {
-        CoworkspaceManager.getCoworkspaces()
+        mCoworkspacesSubscription = CoworkspaceManager.getCoworkspaces()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(mCoworkspacesObserver);

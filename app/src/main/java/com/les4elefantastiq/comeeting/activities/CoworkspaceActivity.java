@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
 
+/**
+ * Display CoworkspaceFragment
+ */
 public class CoworkspaceActivity extends BaseActivity {
 
     // ------------------ LifeCycle ------------------- //
@@ -16,7 +19,7 @@ public class CoworkspaceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.coworkspace_activity);
 
-        manageToolbar();
+        initializeToolbar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Create the fragment

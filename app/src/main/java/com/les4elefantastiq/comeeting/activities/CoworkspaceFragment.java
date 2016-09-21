@@ -38,6 +38,11 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Display some Coworkers and the liveFeed of the specified Coworkspace
+ * <p>
+ * This Fragment is used in CoworkspaceActivity and NavigationActivity
+ */
 public class CoworkspaceFragment extends Fragment {
 
     // -------------- Objects, Variables -------------- //
@@ -73,7 +78,6 @@ public class CoworkspaceFragment extends Fragment {
         mProgressBar.setVisibility(View.VISIBLE);
 
         String coworkspaceId = getArguments().getString(EXTRA_COWORKSPACE_ID);
-
         loadCoworkspace(coworkspaceId);
         loadLiveFeedMessages(coworkspaceId);
 
@@ -94,6 +98,11 @@ public class CoworkspaceFragment extends Fragment {
 
     // ------------------- Methods -------------------- //
 
+    /**
+     * Get a Coworkspace based of the specified id
+     *
+     * @param coworkspaceId The id of the Coworkspace to get
+     */
     private void loadCoworkspace(String coworkspaceId) {
         mCoworkspaceSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
                 .subscribeOn(Schedulers.io())
@@ -101,6 +110,10 @@ public class CoworkspaceFragment extends Fragment {
                 .subscribe(mCoworkspaceObserver);
     }
 
+    /**
+     * Display some of the Coworkers of the emitted Coworkspace as a header of mListView,
+     * set the title and the menu of the ActionBar
+     */
     private Observer<Coworkspace> mCoworkspaceObserver = new Observer<Coworkspace>() {
 
         @Override
@@ -134,6 +147,9 @@ public class CoworkspaceFragment extends Fragment {
 
     };
 
+    /**
+     * @return a view that display some of the Coworkers of the specified Coworkspace
+     */
     private View getCoworkersView(Coworkspace coworkspace) {
         View view = getActivity().getLayoutInflater().inflate(R.layout.coworkspace_fragment_coworkers, null, false);
 
@@ -169,12 +185,16 @@ public class CoworkspaceFragment extends Fragment {
             // Click on "See more" -> Open Activity with all Coworkers
             view.findViewById(R.id.textview_see_more)
                     .setOnClickListener(v -> startActivity(new Intent(getActivity(), CoworkersActivity.class)
-                            .putExtra(EXTRA_COWORKSPACE_ID, getArguments().getString(EXTRA_COWORKSPACE_ID))));
+                            .putExtra(CoworkersActivity.EXTRA_COWORKSPACE_ID, getArguments().getString(EXTRA_COWORKSPACE_ID))));
         }
 
         return view;
     }
 
+    /**
+     * Get the LiveFeedMessages of the specified Coworkspace
+     * @param coworkspaceId
+     */
     private void loadLiveFeedMessages(String coworkspaceId) {
         mLiveFeedMessagesSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
                 .flatMap(LivefeedManager::getLiveFeedMessages)
@@ -183,6 +203,9 @@ public class CoworkspaceFragment extends Fragment {
                 .subscribe(mLiveFeedMessageObserver);
     }
 
+    /**
+     * Display the emitted list of LiveFeedMessages
+     */
     private Observer<List<LiveFeedMessage>> mLiveFeedMessageObserver = new Observer<List<LiveFeedMessage>>() {
 
         @Override
@@ -211,6 +234,9 @@ public class CoworkspaceFragment extends Fragment {
 
     // ----------------- GUI Adapter ------------------ //
 
+    /**
+     * Display a list of LiveFeedMessages into mListView
+     */
     private class Adapter extends BaseAdapter {
 
         private List<LiveFeedMessage> mLiveFeedMessages = new ArrayList<>();
@@ -354,10 +380,12 @@ public class CoworkspaceFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case MENU_FAVORITE:
+
+            case MENU_FAVORITE: // Set this Coworkspace as Favorite
+                // Not implemented yet on server side
                 break;
 
-            case MENU_INFORMATION:
+            case MENU_INFORMATION: // Open Activity that display the informations about this Coworkspace
                 Intent intent = new Intent(getContext(), CoworkspaceDetailsActivity.class);
                 intent.putExtra(CoworkspaceDetailsActivity.EXTRA_COWORKSPACE_ID, mCoworkspace.id);
                 startActivity(intent);

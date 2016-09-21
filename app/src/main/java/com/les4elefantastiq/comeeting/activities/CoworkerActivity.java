@@ -25,6 +25,9 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Display the information (Name, description, job title, ...) of the specified Coworker
+ */
 public class CoworkerActivity extends BaseActivity {
 
     // -------------- Objects, Variables -------------- //
@@ -36,7 +39,7 @@ public class CoworkerActivity extends BaseActivity {
 
     // -------------------- Views --------------------- //
 
-    private ImageView mImageView;
+    private ImageView mImageViewCoworker;
     private ProgressBar mProgressBar;
     private NestedScrollView mNestedScrollView;
 
@@ -52,6 +55,7 @@ public class CoworkerActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // FIXME : It's already done in BaseActivity (but with colorPrimaryDark)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.setStatusBarColor(Color.parseColor("#00000000"));
@@ -60,7 +64,7 @@ public class CoworkerActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
-        mImageView = (ImageView) findViewById(R.id.imageview);
+        mImageViewCoworker = (ImageView) findViewById(R.id.imageview);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mNestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
 
@@ -79,6 +83,11 @@ public class CoworkerActivity extends BaseActivity {
 
     // ------------------- Methods -------------------- //
 
+    /**
+     * Get the information about the specified Coworker
+     *
+     * @param coworkerId The id of the Coworker to display
+     */
     private void loadCoworker(String coworkerId) {
         mNestedScrollView.setVisibility(View.GONE);
 
@@ -88,6 +97,9 @@ public class CoworkerActivity extends BaseActivity {
                 .subscribe(mCoworkerObserver);
     }
 
+    /**
+     * Display the information about the emitted Coworker
+     */
     private Observer<Coworker> mCoworkerObserver = new Observer<Coworker>() {
 
         @Override
@@ -110,7 +122,7 @@ public class CoworkerActivity extends BaseActivity {
 
             Picasso.with(getBaseContext())
                     .load(coworker.pictureUrl)
-                    .into(mImageView);
+                    .into(mImageViewCoworker);
         }
 
     };

@@ -25,9 +25,14 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Display all the Coworkers of the specified Coworkspace
+ */
 public class CoworkersActivity extends BaseActivity {
 
     // -------------- Objects, Variables -------------- //
+
+    public static final String EXTRA_COWORKSPACE_ID = "EXTRA_COWORKSPACE_ID";
 
     private Subscription mLoadCoworkersSubscription;
 
@@ -46,7 +51,7 @@ public class CoworkersActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.coworkers_activity);
 
-        manageToolbar();
+        initializeToolbar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Coworkers");
 
@@ -55,8 +60,7 @@ public class CoworkersActivity extends BaseActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        String coworkspaceId = getIntent().getStringExtra(CoworkspaceFragment.EXTRA_COWORKSPACE_ID);
-
+        String coworkspaceId = getIntent().getStringExtra(EXTRA_COWORKSPACE_ID);
         loadCoworkers(coworkspaceId);
     }
 
@@ -71,6 +75,11 @@ public class CoworkersActivity extends BaseActivity {
 
     // ------------------- Methods -------------------- //
 
+    /**
+     * Get all the Coworksers of the specified Coworkspace
+     *
+     * @param coworkspaceId The id of the Coworkspace
+     */
     private void loadCoworkers(String coworkspaceId) {
         mLoadCoworkersSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
                 .flatMap(CoworkspaceManager::getCoworkers)
@@ -79,6 +88,9 @@ public class CoworkersActivity extends BaseActivity {
                 .subscribe(mCoworkersObserver);
     }
 
+    /**
+     * Display the emitted list of Coworkers
+     */
     private Observer<List<Coworker>> mCoworkersObserver = new Observer<List<Coworker>>() {
 
         @Override
@@ -106,6 +118,9 @@ public class CoworkersActivity extends BaseActivity {
 
     // ----------------- GUI Adapter ------------------ //
 
+    /**
+     * Display a list of Coworkers into mListView
+     */
     private class Adapter extends BaseAdapter {
 
         private List<Coworker> coworkers;

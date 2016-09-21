@@ -9,19 +9,17 @@ import android.view.WindowManager;
 
 import com.les4elefantastiq.comeeting.R;
 
+/**
+ * Every Activity of this project should extends BaseActivity
+ */
 public class BaseActivity extends AppCompatActivity {
-
-    // -------------- Objects, Variables -------------- //
-
-    // -------------------- Views --------------------- //
-
-    // ------------------ LifeCycle ------------------- //
-
-    // ------------------ Listeners ------------------- //
 
     // ------------------- Methods -------------------- //
 
-    protected void manageToolbar() {
+    /**
+     * Initialize the ToolBar and set the color of the StatusBar
+     */
+    protected void initializeToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -33,13 +31,11 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    // ------------------ AsyncTasks ------------------ //
-
-    // ----------------- GUI Adapter ------------------ //
-
     // --------------------- Menu --------------------- //
 
-
+    /**
+     * The only purpose of this method is to finish() the Activity when the user click the 'Up' button of the ActionBar
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home)
