@@ -3,6 +3,7 @@ package com.les4elefantastiq.comeeting.activities;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,12 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * NavigationActivity is the entry point of the App. It contains the Navigationdrawer.<br />
+ * Redirect the user to SignInActivity if needed.<br />
+ * Display the CoworkspaceFragment (with the Coworkspace in which the user is currently) or the list
+ * of all Coworkspace if the user is not in a Coworkspace
+ */
 public class NavigationActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // -------------- Objects, Variables -------------- //
@@ -68,6 +75,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         setContentView(R.layout.navigation_activity);
         mNavigationView = ((NavigationView) findViewById(R.id.navigationView));
 
+        // The user is Logged -> Initialize the NavigationDrawer and display a (all the) Coworkspace(s)
         if (ProfileManager.isLogged(this)) {
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -117,7 +125,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         menuItem.setChecked(true);
 
         getSupportActionBar().setTitle(menuItem.getTitle());
@@ -126,6 +134,8 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         Bundle bundle = new Bundle();
 
         switch (menuItem.getItemId()) {
+
+            // Display CoworkspaceFragment with the specified Coworkspace
             case MENU_CURRENT_COWORKSPACE:
                 fragment = new CoworkspaceFragment();
 
@@ -134,16 +144,19 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
                 fragment.setArguments(bundle);
                 break;
 
+            // Display all coworkspaces
             case MENU_MORE_COWORKSPACE:
                 fragment = new CoworkspacesFragment();
                 break;
 
+            // Display CoworkspaceFragment with the specified Coworkspace
             case MENU_SPECIFIC_COWORKSPACE:
                 fragment = new CoworkspaceFragment();
 
-                // Pass the CoworkspaceId to the Fragment
+                // Get the Coworkspace associated to the selected MenuItem
                 Coworkspace selectedCoworkspace = mMenuItemCoworkspaceMap.get(menuItem);
                 if (selectedCoworkspace != null) {
+                    // Pass the CoworkspaceId to the Fragment
                     bundle.putString(CoworkspaceFragment.EXTRA_COWORKSPACE_ID, selectedCoworkspace.id);
                     fragment.setArguments(bundle);
                     break;
@@ -161,6 +174,9 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
     // ------------------- Methods -------------------- //
 
+    /**
+     * Load the current Coworkspace
+     */
     private void loadCurrentCoworkspace() {
         mCurrentCoworkspacesSubscription = ProfileManager.getCurrentCowerkspace(getBaseContext())
                 .subscribeOn(Schedulers.io())
@@ -168,6 +184,10 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
                 .subscribe(currentCoworkspaceObserver);
     }
 
+    /**
+     * If the emitted Coworkerspace is not null, display it in CoworkspaceFragment and in the NavigationDrawer.<br />
+     * Otherwise, display CoworkspacesFragment.
+     */
     private Observer<Coworkspace> currentCoworkspaceObserver = new Observer<Coworkspace>() {
 
         @Override
@@ -206,10 +226,16 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
     };
 
+    /**
+     * Load the favorite Coworkspaces
+     */
     private void loadFavoriteCoworkspaces() {
-
+        // TODO : Load the favorites Coworkspaces and emit them to favoriteCoworkspacesObserver
     }
 
+    /**
+     * Add the emitted list of Coworkspaces in the 'Favorite Coworkspaces' of the NavigationDrawer
+     */
     private Observer<List<Coworkspace>> favoriteCoworkspacesObserver = new Observer<List<Coworkspace>>() {
 
         @Override
@@ -229,6 +255,11 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
     };
 
+    /**
+     * Display the specified Fragment as the content of this Activity
+     *
+     * @param fragment The Fragment to display
+     */
     private void showFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -241,6 +272,9 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
 
     // -------------- Navigation Drawer --------------- //
 
+    /**
+     * Initialize the NavigationDrawer
+     */
     private void initializeNavigationDrawer() {
         // Manage DrawerLayout and his toggle
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -268,6 +302,9 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         menu.add(Integer.MAX_VALUE, MENU_MORE_COWORKSPACE, 0, "Voir les autres coworkspaces");
     }
 
+    /**
+     * Display the information of the user in the top of the NavigationDrawer
+     */
     private void showUserProfileInNavigationDrawer() {
         Coworker coworkerProfile = SharedPreferencesManager.getProfile(this);
         if (coworkerProfile == null) {
@@ -286,6 +323,10 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         emailTextView.setText(coworkerProfile.headline);
     }
 
+    /**
+     * Add a link to the specified Coworkspace in the NavigationDrawer as the current Coworkspace.
+     * @param currentCoworkspace The Coworkspace to display as the current Coworkspace
+     */
     private void addCurrentCoworkspaceInNavigationDrawer(@Nullable Coworkspace currentCoworkspace) {
         Menu menu = mNavigationView.getMenu();
 
@@ -300,6 +341,10 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         }
     }
 
+    /**
+     * Add links to the specified Coworkspaces in the NavigationDrawer as favorites Coworkspaces
+     * @param favoriteCoworkspace The Coworkspaces to display as favorites Coworkspaces
+     */
     private void addFavoritesCoworkspacesInNavigationDrawer(List<Coworkspace> favoriteCoworkspace) {
         Menu menu = mNavigationView.getMenu();
 

@@ -27,6 +27,9 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Display all the Coworkspaces
+ */
 public class CoworkspacesFragment extends Fragment {
 
     // -------------- Objects, Variables -------------- //
@@ -72,6 +75,9 @@ public class CoworkspacesFragment extends Fragment {
 
     // ------------------- Methods -------------------- //
 
+    /**
+     * Load all the Coworkspaces
+     */
     private void loadCoworkspaces() {
         mCoworkspacesSubscription = CoworkspaceManager.getCoworkspaces()
                 .subscribeOn(Schedulers.io())
@@ -79,6 +85,9 @@ public class CoworkspacesFragment extends Fragment {
                 .subscribe(mCoworkspacesObserver);
     }
 
+    /**
+     * Display the emitted list of Coworkspaces
+     */
     private Observer<List<Coworkspace>> mCoworkspacesObserver = new Observer<List<Coworkspace>>() {
 
         @Override
@@ -105,6 +114,9 @@ public class CoworkspacesFragment extends Fragment {
 
     // ----------------- GUI Adapter ------------------ //
 
+    /**
+     * Display a list of Coworkspaces into mListView
+     */
     private class Adapter extends BaseAdapter {
 
         private List<Coworkspace> coworkspaces;

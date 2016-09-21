@@ -99,7 +99,7 @@ public class CoworkspaceFragment extends Fragment {
     // ------------------- Methods -------------------- //
 
     /**
-     * Get a Coworkspace based of the specified id
+     * Load a Coworkspace based of the specified id
      *
      * @param coworkspaceId The id of the Coworkspace to get
      */
@@ -192,7 +192,7 @@ public class CoworkspaceFragment extends Fragment {
     }
 
     /**
-     * Get the LiveFeedMessages of the specified Coworkspace
+     * Load the LiveFeedMessages of the specified Coworkspace
      * @param coworkspaceId
      */
     private void loadLiveFeedMessages(String coworkspaceId) {

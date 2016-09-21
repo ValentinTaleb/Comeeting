@@ -76,7 +76,7 @@ public class CoworkersActivity extends BaseActivity {
     // ------------------- Methods -------------------- //
 
     /**
-     * Get all the Coworksers of the specified Coworkspace
+     * Load all the Coworksers of the specified Coworkspace
      *
      * @param coworkspaceId The id of the Coworkspace
      */

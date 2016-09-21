@@ -80,6 +80,11 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
 
     // ------------------- Methods -------------------- //
 
+    /**
+     * Load the information of the specified Coworkspace
+     *
+     * @param coworkspaceId The id of the Coworkspace
+     */
     private void loadCoworkspace(String coworkspaceId) {
         mCoworkspaceSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
                 .subscribeOn(Schedulers.io())
@@ -87,6 +92,9 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
                 .subscribe(mCoworkspaceOserver);
     }
 
+    /**
+     * Display the information of the emitted Coworkspace
+     */
     private Observer<Coworkspace> mCoworkspaceOserver = new Observer<Coworkspace>() {
 
         @Override
