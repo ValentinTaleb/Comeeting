@@ -25,6 +25,7 @@ import com.linkedin.platform.listeners.ApiResponse;
 import com.linkedin.platform.listeners.AuthListener;
 import com.linkedin.platform.utils.Scope;
 
+import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -33,12 +34,12 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     // -------------- Objects, Variables -------------- //
 
-    private Subscription loginSubscription;
+    private Subscription mLoginSubscription;
 
 
     // -------------------- Views --------------------- //
 
-    private ProgressDialog progressDialog;
+    private ProgressDialog mProgressDialog;
 
 
     // ------------------ LifeCycle ------------------- //
@@ -68,8 +69,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     protected void onDestroy() {
         super.onDestroy();
 
-        if (loginSubscription != null && !loginSubscription.isUnsubscribed())
-            loginSubscription.unsubscribe();
+        if (mLoginSubscription != null && !mLoginSubscription.isUnsubscribed())
+            mLoginSubscription.unsubscribe();
     }
 
 
@@ -77,7 +78,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        progressDialog = ProgressDialog.show(SignInActivity.this, null, "Please wait ...", true, false);
+        mProgressDialog = ProgressDialog.show(SignInActivity.this, null, "Please wait ...", true, false);
         ProfileManager.signWithLinkedIn(SignInActivity.this);
     }
 
@@ -106,6 +107,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         showConnectionErrorAlertDialog();
     }
 
+
     // ------------------- Methods -------------------- //
 
     public static Scope buildScope() {
@@ -113,8 +115,8 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void showConnectionErrorAlertDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
         }
 
         Toast.makeText(this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
@@ -125,47 +127,34 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         finish();
     }
 
-
-    // ------------------ AsyncTasks ------------------ //
-
     private void login(ApiResponse apiResponse) {
         LinkedInCoworker linkedInCoworker = new Gson().fromJson(apiResponse.getResponseDataAsString(), LinkedInCoworker.class);
         SharedPreferencesManager.setLinkedInId(SignInActivity.this, linkedInCoworker.linkedInId);
         SharedPreferencesManager.saveProfile(SignInActivity.this, linkedInCoworker.getCoworker());
 
-        loginSubscription = CoworkerManager.login(linkedInCoworker.getCoworker())
+        mLoginSubscription = CoworkerManager.login(linkedInCoworker.getCoworker())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(loginObserver);
     }
 
+    private Observer<Void> loginObserver = new Observer<Void>() {
 
-//    private class LoginAsyncTask extends AsyncTask<ApiResponse, Void, Boolean> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected Boolean doInBackground(ApiResponse... apiResponses) {
-//            LinkedInCoworker linkedInCoworker = new Gson().fromJson(apiResponses[0].getResponseDataAsString(), LinkedInCoworker.class);
-//            SharedPreferencesManager.setLinkedInId(SignInActivity.this, linkedInCoworker.linkedInId);
-//            SharedPreferencesManager.saveProfile(SignInActivity.this, linkedInCoworker.getCoworker());
-//            Boolean success = CoworkerManager.login(linkedInCoworker.getCoworker());
-//
-//            return success;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Boolean success) {
-//            super.onPostExecute(success);
-//            progressDialog.dismiss();
-//
-//            if (success) {
-//                showNavigationActivity();
-//            }
-//        }
-//    }
+        @Override
+        public void onCompleted() {
+            mProgressDialog.dismiss();
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onNext(Void aVoid) {
+            showNavigationActivity();
+        }
+
+    };
 
 }

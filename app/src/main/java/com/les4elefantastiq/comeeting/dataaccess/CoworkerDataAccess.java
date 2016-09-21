@@ -23,10 +23,10 @@ public class CoworkerDataAccess {
     }
 
     private interface CoworkerInterface {
-        @POST("/api/coworker")
+        @POST("api/coworker")
         Observable<Void> login(@Body Coworker coworker);
 
-        @GET("/api/coworker/{linkedInId}")
+        @GET("api/coworker/{linkedInId}")
         Observable<Coworker> getProfile(@Path("linkedInId") String linkedInId);
     }
 

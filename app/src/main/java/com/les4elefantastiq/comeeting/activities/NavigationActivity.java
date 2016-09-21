@@ -178,6 +178,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
         @Override
         public void onError(Throwable e) {
             Toast.makeText(getBaseContext(), R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         @Override

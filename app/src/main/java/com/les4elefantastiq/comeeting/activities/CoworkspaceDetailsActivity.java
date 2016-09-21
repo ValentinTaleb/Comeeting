@@ -5,9 +5,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +37,8 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
     // -------------------- Views --------------------- //
 
     private ImageView mImageView;
+    private ProgressBar mProgressBar;
+    private NestedScrollView mNestedScrollView;
 
 
     // ------------------ LifeCycle ------------------- //
@@ -53,9 +58,11 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Coworkspace");
+        getSupportActionBar().setTitle("");
 
         mImageView = (ImageView) findViewById(R.id.imageview);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mNestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
 
         String coworkspaceId = getIntent().getStringExtra(EXTRA_COWORKSPACE_ID);
         loadCoworkspace(coworkspaceId);
@@ -83,11 +90,14 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
 
         @Override
         public void onCompleted() {
+            mProgressBar.setVisibility(View.GONE);
+            mNestedScrollView.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onError(Throwable e) {
             Toast.makeText(CoworkspaceDetailsActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         @Override

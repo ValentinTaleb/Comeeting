@@ -65,7 +65,6 @@ public class CoworkerActivity extends BaseActivity {
         mNestedScrollView = (NestedScrollView) findViewById(R.id.nested_scroll_view);
 
         String coworkerId = getIntent().getStringExtra(EXTRA_COWORKER_ID);
-
         loadCoworker(coworkerId);
     }
 
@@ -82,7 +81,6 @@ public class CoworkerActivity extends BaseActivity {
 
     private void loadCoworker(String coworkerId) {
         mNestedScrollView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
 
         mLoadCoworkerSubscription = CoworkerManager.getCoworker((coworkerId))
                 .subscribeOn(Schedulers.io())

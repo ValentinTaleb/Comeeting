@@ -44,6 +44,7 @@ public class CoworkspaceFragment extends Fragment {
 
     public static final String EXTRA_COWORKSPACE_ID = "EXTRA_COWORKSPACE_ID";
 
+    private Subscription mCoworkspaceSubscription;
     private Subscription mLiveFeedMessagesSubscription;
 
     private Coworkspace mCoworkspace;
@@ -72,6 +73,8 @@ public class CoworkspaceFragment extends Fragment {
         mProgressBar.setVisibility(View.VISIBLE);
 
         String coworkspaceId = getArguments().getString(EXTRA_COWORKSPACE_ID);
+
+        loadCoworkspace(coworkspaceId);
         loadLiveFeedMessages(coworkspaceId);
 
         return view;
@@ -81,12 +84,96 @@ public class CoworkspaceFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
+        if (mCoworkspaceSubscription != null && !mCoworkspaceSubscription.isUnsubscribed())
+            mCoworkspaceSubscription.unsubscribe();
+
         if (mLiveFeedMessagesSubscription != null && !mLiveFeedMessagesSubscription.isUnsubscribed())
             mLiveFeedMessagesSubscription.unsubscribe();
     }
 
 
     // ------------------- Methods -------------------- //
+
+    private void loadCoworkspace(String coworkspaceId) {
+        mCoworkspaceSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(mCoworkspaceObserver);
+    }
+
+    private Observer<Coworkspace> mCoworkspaceObserver = new Observer<Coworkspace>() {
+
+        @Override
+        public void onCompleted() {
+            if (mLiveFeedMessagesSubscription.isUnsubscribed())
+                mProgressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            Toast.makeText(getActivity(), R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onNext(Coworkspace coworkspace) {
+
+            if (coworkspace != null) {
+                // Set the ActionBar's title
+                ((BaseActivity) getActivity()).getSupportActionBar().setTitle(coworkspace.name);
+
+                // Display the coworkers of this coworkspace in header of the ListView
+                mListView.addHeaderView(getCoworkersView(coworkspace));
+
+                // Now that the Coworkspace has been loaded, refresh the menu to add 'Info' and 'Favorite'
+                mCoworkspace = coworkspace;
+                getActivity().invalidateOptionsMenu();
+            }
+
+        }
+
+    };
+
+    private View getCoworkersView(Coworkspace coworkspace) {
+        View view = getActivity().getLayoutInflater().inflate(R.layout.coworkspace_fragment_coworkers, null, false);
+
+        if (coworkspace != null) {
+            ArrayList<ImageView> imageViews = new ArrayList<>();
+            imageViews.add((ImageView) view.findViewById(R.id.imageview_coworker_1));
+            imageViews.add((ImageView) view.findViewById(R.id.imageview_coworker_2));
+            imageViews.add((ImageView) view.findViewById(R.id.imageview_coworker_3));
+            imageViews.add((ImageView) view.findViewById(R.id.imageview_coworker_4));
+
+            for (int i = 0; i < 4; i++) {
+                if (coworkspace.coworkers.size() > i) {
+                    ImageView imageView = imageViews.get(i);
+                    Coworker coworker = coworkspace.coworkers.get(i);
+
+                    Picasso.with(getContext())
+                            .load(coworker.pictureUrl)
+                            .placeholder(R.drawable.user)
+                            .into(imageView);
+
+                    imageView.setTag(coworker);
+
+                    // Click on the picture of a Coworker -> Open Activity with info of this Coworker
+                    imageView.setOnClickListener(v -> {
+                        Coworker coworker1 = (Coworker) v.getTag();
+                        startActivity(new Intent(getActivity(), CoworkerActivity.class)
+                                .putExtra(CoworkerActivity.EXTRA_COWORKER_ID, coworker1.linkedInId));
+                    });
+
+                }
+            }
+
+            // Click on "See more" -> Open Activity with all Coworkers
+            view.findViewById(R.id.textview_see_more)
+                    .setOnClickListener(v -> startActivity(new Intent(getActivity(), CoworkersActivity.class)
+                            .putExtra(EXTRA_COWORKSPACE_ID, getArguments().getString(EXTRA_COWORKSPACE_ID))));
+        }
+
+        return view;
+    }
 
     private void loadLiveFeedMessages(String coworkspaceId) {
         mLiveFeedMessagesSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
@@ -100,7 +187,8 @@ public class CoworkspaceFragment extends Fragment {
 
         @Override
         public void onCompleted() {
-            mProgressBar.setVisibility(View.GONE);
+            if (mCoworkspaceSubscription.isUnsubscribed())
+                mProgressBar.setVisibility(View.GONE);
         }
 
         @Override
@@ -111,7 +199,6 @@ public class CoworkspaceFragment extends Fragment {
 
         @Override
         public void onNext(List<LiveFeedMessage> liveFeedMessages) {
-            ((BaseActivity) getActivity()).getSupportActionBar().setTitle(mCoworkspace.name);
 
             if (liveFeedMessages != null)
                 mListView.setAdapter(new Adapter(liveFeedMessages));
@@ -126,7 +213,7 @@ public class CoworkspaceFragment extends Fragment {
 
     private class Adapter extends BaseAdapter {
 
-        private List<LiveFeedMessage> liveFeedMessages;
+        private List<LiveFeedMessage> mLiveFeedMessages = new ArrayList<>();
 
         private class ObjectsHolder {
             ImageView imageView;
@@ -135,33 +222,27 @@ public class CoworkspaceFragment extends Fragment {
         }
 
         public Adapter(List<LiveFeedMessage> liveFeedMessages) {
-            this.liveFeedMessages = liveFeedMessages;
+            mLiveFeedMessages = liveFeedMessages;
         }
 
         @Override
         public int getCount() {
-            return liveFeedMessages.size() + 1;
+            return mLiveFeedMessages.size();
         }
 
         @Override
         public LiveFeedMessage getItem(int position) {
-            if (position == 0)
-                return null;
-            else
-                return liveFeedMessages.get(position - 1);
+            return mLiveFeedMessages.get(position);
         }
 
         @Override
         public int getViewTypeCount() {
-            return 2;
+            return 1;
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (position == 0)
-                return 0;
-            else
-                return 1;
+            return 0;
         }
 
         @Override
@@ -173,48 +254,6 @@ public class CoworkspaceFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             LiveFeedMessage liveFeedMessage = getItem(position);
 
-            if (position == 0)
-                return getCoworkersView(convertView, parent);
-            else
-                return getLiveFeedMessageView(liveFeedMessage, convertView, parent);
-        }
-
-        private View getCoworkersView(View convertView, ViewGroup parent) {
-            if (convertView == null)
-                convertView = getActivity().getLayoutInflater().inflate(R.layout.coworkspace_fragment_coworkers, parent, false);
-
-            ArrayList<ImageView> imageViews = new ArrayList<>();
-            imageViews.add((ImageView) convertView.findViewById(R.id.imageview_coworker_1));
-            imageViews.add((ImageView) convertView.findViewById(R.id.imageview_coworker_2));
-            imageViews.add((ImageView) convertView.findViewById(R.id.imageview_coworker_3));
-            imageViews.add((ImageView) convertView.findViewById(R.id.imageview_coworker_4));
-
-            for (int i = 0; i < 4; i++) {
-                if (mCoworkspace.coworkers.size() > i) {
-                    ImageView imageView = imageViews.get(i);
-                    Coworker coworker = mCoworkspace.coworkers.get(i);
-
-                    Picasso.with(getContext())
-                            .load(coworker.pictureUrl)
-                            .placeholder(R.drawable.user)
-                            .into(imageView);
-
-                    imageView.setTag(coworker);
-
-                    imageView.setOnClickListener(view -> {
-                        Coworker coworker1 = (Coworker) view.getTag();
-                        startActivity(new Intent(getActivity(), CoworkerActivity.class).putExtra(CoworkerActivity.EXTRA_COWORKER_ID, coworker1.linkedInId));
-                    });
-
-                }
-            }
-
-            convertView.findViewById(R.id.textview_see_more).setOnClickListener(onSeeMoreCoworkersClickListener);
-
-            return convertView;
-        }
-
-        private View getLiveFeedMessageView(LiveFeedMessage liveFeedMessage, View convertView, ViewGroup parent) {
             ObjectsHolder objectsHolder;
 
             if (convertView == null) {
@@ -289,8 +328,6 @@ public class CoworkspaceFragment extends Fragment {
             return convertView;
         }
 
-        private View.OnClickListener onSeeMoreCoworkersClickListener = view -> startActivity(new Intent(getActivity(), CoworkersActivity.class).putExtra(EXTRA_COWORKSPACE_ID, getArguments().getString(EXTRA_COWORKSPACE_ID)));
-
     }
 
 
@@ -303,13 +340,15 @@ public class CoworkspaceFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        MenuItem menuItemInformation = menu.add(0, MENU_INFORMATION, 0, "Information");
-        menuItemInformation.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menuItemInformation.setIcon(R.drawable.ic_info_outline);
+        if (mCoworkspace != null) {
+            MenuItem menuItemInformation = menu.add(0, MENU_INFORMATION, 0, "Information");
+            menuItemInformation.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menuItemInformation.setIcon(R.drawable.ic_info_outline);
 
-        MenuItem menuItemFavorite = menu.add(0, MENU_FAVORITE, 0, "Favoris");
-        menuItemFavorite.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menuItemFavorite.setIcon(R.drawable.ic_favorite);
+            MenuItem menuItemFavorite = menu.add(0, MENU_FAVORITE, 0, "Favoris");
+            menuItemFavorite.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menuItemFavorite.setIcon(R.drawable.ic_favorite);
+        }
     }
 
     @Override
