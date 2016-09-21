@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
 import com.les4elefantastiq.comeeting.managers.CoworkerManager;
-import com.les4elefantastiq.comeeting.managers.ProfileManager;
 import com.les4elefantastiq.comeeting.managers.SharedPreferencesManager;
 import com.les4elefantastiq.comeeting.models.linkedinmodels.LinkedInCoworker;
 import com.linkedin.platform.APIHelper;
@@ -30,6 +29,10 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * Ask the user to Login with LinkedIn then lead him to NavigationActivity.<br />
+ * LinkedIn must be installed.
+ */
 public class SignInActivity extends BaseActivity implements View.OnClickListener, ApiListener, AuthListener {
 
     // -------------- Objects, Variables -------------- //
@@ -50,6 +53,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_in_activity);
 
+        // FIXME : It's already done in BaseActivity O_o
         // Set status bar color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -61,7 +65,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Add this line to your existing onActivityResult() method
+        // Let LinkedIn manage the result of onActivityResult
         LISessionManager.getInstance(getApplicationContext()).onActivityResult(this, requestCode, resultCode, data);
     }
 
@@ -78,8 +82,9 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        mProgressDialog = ProgressDialog.show(SignInActivity.this, null, "Please wait ...", true, false);
-        ProfileManager.signWithLinkedIn(SignInActivity.this);
+        mProgressDialog = ProgressDialog.show(SignInActivity.this, null, getString(R.string.Please_wait), true, false);
+
+        launchLinkedInLogInActivity();
     }
 
     @Override
@@ -89,7 +94,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
 
     @Override
     public void onApiError(LIApiError LIApiError) {
-        showConnectionErrorAlertDialog();
+        displayConnectionErrorAlertDialog();
     }
 
     @Override
@@ -98,23 +103,29 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         // Now, get profile data
         String url = "https://api.linkedin.com/v1/people/~:(first-name,last-name,id,picture-urls::(original),positions,summary,headline)?format=json";
 
-        APIHelper apiHelper = APIHelper.getInstance(this);
-        apiHelper.getRequest(getApplicationContext(), url, this);
+        APIHelper.getInstance(this).getRequest(getApplicationContext(), url, this);
     }
 
     @Override
     public void onAuthError(LIAuthError error) {
-        showConnectionErrorAlertDialog();
+        displayConnectionErrorAlertDialog();
     }
 
 
     // ------------------- Methods -------------------- //
 
-    public static Scope buildScope() {
-        return Scope.build(Scope.R_BASICPROFILE, Scope.W_SHARE);
+    /**
+     * Launch the LinkedIn Activity to log in
+     */
+    private void launchLinkedInLogInActivity() {
+        Scope linkedInScope = Scope.build(Scope.R_BASICPROFILE, Scope.W_SHARE);
+        LISessionManager.getInstance(SignInActivity.this).init(this, linkedInScope, this, true);
     }
 
-    public void showConnectionErrorAlertDialog() {
+    /**
+     * Display a error message if the log in failed
+     */
+    public void displayConnectionErrorAlertDialog() {
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
         }
@@ -122,11 +133,11 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
         Toast.makeText(this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_LONG).show();
     }
 
-    public void showNavigationActivity() {
-        startActivity(new Intent(SignInActivity.this, NavigationActivity.class));
-        finish();
-    }
-
+    /**
+     * Based on the response of LinkedIn, log the user in the App server
+     *
+     * @param apiResponse
+     */
     private void login(ApiResponse apiResponse) {
         LinkedInCoworker linkedInCoworker = new Gson().fromJson(apiResponse.getResponseDataAsString(), LinkedInCoworker.class);
         SharedPreferencesManager.setLinkedInId(SignInActivity.this, linkedInCoworker.linkedInId);
@@ -138,21 +149,25 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
                 .subscribe(loginObserver);
     }
 
+    /**
+     * Lead the user to NavigationActivity after the Login succeeded
+     */
     private Observer<Void> loginObserver = new Observer<Void>() {
 
         @Override
         public void onCompleted() {
-            mProgressDialog.dismiss();
         }
 
         @Override
         public void onError(Throwable e) {
-
+            Toast.makeText(SignInActivity.this, R.string.Whoops_an_error_has_occured__Check_your_internet_connection, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
 
         @Override
         public void onNext(Void aVoid) {
-            showNavigationActivity();
+            startActivity(new Intent(SignInActivity.this, NavigationActivity.class));
+            finish();
         }
 
     };

@@ -101,7 +101,7 @@ public class CoworkspaceFragment extends Fragment {
     /**
      * Load a Coworkspace based of the specified id
      *
-     * @param coworkspaceId The id of the Coworkspace to get
+     * @param coworkspaceId The id of the Coworkspace
      */
     private void loadCoworkspace(String coworkspaceId) {
         mCoworkspaceSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)
@@ -193,7 +193,8 @@ public class CoworkspaceFragment extends Fragment {
 
     /**
      * Load the LiveFeedMessages of the specified Coworkspace
-     * @param coworkspaceId
+     *
+     * @param coworkspaceId The id of the Coworkspace
      */
     private void loadLiveFeedMessages(String coworkspaceId) {
         mLiveFeedMessagesSubscription = CoworkspaceManager.getCoworkspace(coworkspaceId)

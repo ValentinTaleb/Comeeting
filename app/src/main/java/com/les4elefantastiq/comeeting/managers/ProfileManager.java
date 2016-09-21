@@ -2,10 +2,8 @@ package com.les4elefantastiq.comeeting.managers;
 
 import android.content.Context;
 
-import com.les4elefantastiq.comeeting.activities.SignInActivity;
 import com.les4elefantastiq.comeeting.dataaccess.CoworkerDataAccess;
 import com.les4elefantastiq.comeeting.models.Coworkspace;
-import com.linkedin.platform.LISessionManager;
 
 import java.util.List;
 
@@ -24,9 +22,6 @@ public class ProfileManager {
         return SharedPreferencesManager.getLinkedInId(context) != null;
     }
 
-    public static void signWithLinkedIn(final SignInActivity context) {
-        LISessionManager.getInstance(context).init(context, context.buildScope(), context, true);
-    }
 
     public static Observable<Coworkspace> getCurrentCowerkspace(Context context) {
 
