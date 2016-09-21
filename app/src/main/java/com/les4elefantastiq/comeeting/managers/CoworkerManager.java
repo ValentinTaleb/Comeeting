@@ -9,10 +9,6 @@ import rx.Observable;
 
 public class CoworkerManager {
 
-    // -------------- Objects, Variables -------------- //
-
-
-
     // ---------------- Public Methods ---------------- //
 
     @NonNull
@@ -24,8 +20,5 @@ public class CoworkerManager {
     public static Observable<Void> login(Coworker coworker) {
         return CoworkerDataAccess.login(coworker);
     }
-
-
-    // ---------------- Private Methods --------------- //
 
 }

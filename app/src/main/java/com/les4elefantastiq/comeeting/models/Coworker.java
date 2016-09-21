@@ -1,14 +1,9 @@
 package com.les4elefantastiq.comeeting.models;
 
 import com.google.gson.annotations.SerializedName;
-import com.les4elefantastiq.comeeting.models.linkedinmodels.PictureUrls;
-import com.les4elefantastiq.comeeting.models.linkedinmodels.Positions;
 
 import java.util.List;
 
-/**
- * Created by Math on 05/08/16.
- */
 public class Coworker {
 
     // -------------- Objects, Variables -------------- //
@@ -43,11 +38,5 @@ public class Coworker {
         this.favoriteCoworkspacesId = favoriteCoworkspacesId;
         this.currentCoworkspaceId = currentCoworkspaceId;
     }
-
-    // ---------------- Public Methods ---------------- //
-
-    // ---------------- Private Methods --------------- //
-
-    // ----------------- Miscellaneous ---------------- //
 
 }

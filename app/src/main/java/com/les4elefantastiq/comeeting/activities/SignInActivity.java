@@ -136,7 +136,7 @@ public class SignInActivity extends BaseActivity implements View.OnClickListener
     /**
      * Based on the response of LinkedIn, log the user in the App server
      *
-     * @param apiResponse
+     * @param apiResponse The response given by LinkedIn LogIn
      */
     private void login(ApiResponse apiResponse) {
         LinkedInCoworker linkedInCoworker = new Gson().fromJson(apiResponse.getResponseDataAsString(), LinkedInCoworker.class);

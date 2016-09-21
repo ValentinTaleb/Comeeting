@@ -1,12 +1,7 @@
 package com.les4elefantastiq.comeeting.models.linkedinmodels;
 
-import com.les4elefantastiq.comeeting.models.Position;
-
 import java.util.List;
 
-/**
- * Created by Math on 06/08/16.
- */
 public class Positions {
 
     int _total;

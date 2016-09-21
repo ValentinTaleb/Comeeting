@@ -53,8 +53,6 @@ public class LiveFeedMessage implements Comparable<LiveFeedMessage> {
     }
 
 
-    // ---------------- Private Methods --------------- //
-
     // ----------------- Miscellaneous ---------------- //
 
     @Override

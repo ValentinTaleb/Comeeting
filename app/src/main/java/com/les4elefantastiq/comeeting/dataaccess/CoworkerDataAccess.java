@@ -12,11 +12,16 @@ import rx.Observable;
 
 public class CoworkerDataAccess {
 
+    /**
+     * @param linkedInId The id of the Coworker
+     * @return A Coworker based on the specified id (initialy defined by linkedIn)
+     */
     @NonNull
     public static Observable<Coworker> getCoworker(String linkedInId)  {
         return CommonDataAccess.getRetrofit().create(CoworkerInterface.class).getProfile(linkedInId);
     }
 
+    // TODO : Add Javadoc
     @NonNull
     public static Observable<Void> login(Coworker coworker) {
         return CommonDataAccess.getRetrofit().create(CoworkerInterface.class).login(coworker);

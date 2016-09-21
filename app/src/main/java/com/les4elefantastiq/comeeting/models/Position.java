@@ -1,9 +1,5 @@
 package com.les4elefantastiq.comeeting.models;
 
-/**
- * Created by Math on 06/08/16.
- */
-
 public class Position {
 
     int id;
@@ -21,4 +17,5 @@ public class Position {
         this.endDate = endDate;
         this.title = title;
     }
+
 }

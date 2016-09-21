@@ -2,9 +2,6 @@ package com.les4elefantastiq.comeeting.models.linkedinmodels;
 
 import com.les4elefantastiq.comeeting.models.Position;
 
-/**
- * Created by Math on 06/08/16.
- */
 public class Values {
 
     int id;
@@ -30,4 +27,5 @@ public class Values {
 
         return new Position(id, company.name, isCurrent, coworkerStartDate, coworkerEndDate, title);
     }
+
 }

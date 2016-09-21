@@ -7,9 +7,6 @@ import com.les4elefantastiq.comeeting.models.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Math on 06/08/16.
- */
 public class LinkedInCoworker {
 
     // -------------- Objects, Variables -------------- //

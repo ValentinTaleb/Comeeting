@@ -13,6 +13,9 @@ import rx.Observable;
 
 public class LivefeedDataAccess {
 
+    /**
+     * @return A List of LiveFeedMessage of the specified Coworkspace
+     */
     @NonNull
     public static Observable<List<LiveFeedMessage>> getLivefeedMessages(Coworkspace coworkspace) {
         return CommonDataAccess.getRetrofit().create(LivefeedInterface.class).getLivefeedMessages(coworkspace.id);

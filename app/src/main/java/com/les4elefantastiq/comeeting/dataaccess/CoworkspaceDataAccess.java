@@ -13,11 +13,17 @@ import rx.Observable;
 
 public class CoworkspaceDataAccess {
 
+    /**
+     * @return A List of all the Coworkspaces
+     */
     @NonNull
     public static Observable<List<Coworkspace>> getCoworkspaces() {
         return CommonDataAccess.getRetrofit().create(CoworkspacesInterface.class).coworkspaces();
     }
 
+    /**
+     * @return A List of the Coworkers of the specified Coworkspace
+     */
     @NonNull
     public static Observable<List<Coworker>> getCoworkers(Coworkspace coworkspace) {
         return CommonDataAccess.getRetrofit().create(CoworkspaceInterface.class).cowokers(coworkspace.id);

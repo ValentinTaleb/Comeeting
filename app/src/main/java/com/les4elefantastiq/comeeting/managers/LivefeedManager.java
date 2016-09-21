@@ -10,17 +10,10 @@ import rx.Observable;
 
 public class LivefeedManager {
 
-    // -------------- Objects, Variables -------------- //
-
-
     // ---------------- Public Methods ---------------- //
 
     public static Observable<List<LiveFeedMessage>> getLiveFeedMessages(Coworkspace coworkspace) {
         return LivefeedDataAccess.getLivefeedMessages(coworkspace);
     }
 
-
-    // ---------------- Private Methods --------------- //
-
 }
-

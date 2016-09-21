@@ -1,12 +1,7 @@
 package com.les4elefantastiq.comeeting.models;
 
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-/**
- * Created by Math on 05/08/16.
- */
 public class Coworkspace {
 
     // -------------- Objects, Variables -------------- //
@@ -22,6 +17,7 @@ public class Coworkspace {
     public String zipCode;
     public String city;
     public List<Coworker> coworkers;
+
 
     // ----------------- Constructor ------------------ //
 
@@ -39,9 +35,4 @@ public class Coworkspace {
         this.coworkers = coworkers;
     }
 
-    // ---------------- Public Methods ---------------- //
-
-    // ---------------- Private Methods --------------- //
-
-    // ----------------- Miscellaneous ---------------- //
 }

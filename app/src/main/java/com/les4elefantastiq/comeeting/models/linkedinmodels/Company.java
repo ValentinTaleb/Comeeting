@@ -1,13 +1,11 @@
 package com.les4elefantastiq.comeeting.models.linkedinmodels;
 
-/**
- * Created by Math on 06/08/16.
- */
 public class Company {
 
-    String name;
+    public String name;
 
     public Company(String name) {
         this.name = name;
     }
+
 }

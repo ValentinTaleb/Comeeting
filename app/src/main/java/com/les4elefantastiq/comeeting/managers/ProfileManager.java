@@ -11,17 +11,14 @@ import rx.Observable;
 
 public class ProfileManager {
 
-    // -------------- Objects, Variables -------------- //
-
-    //private static Coworker mCoworker;
-
-
     // ---------------- Public Methods ---------------- //
 
+    /**
+     * @return true if the user is logged in, false otherwise
+     */
     public static boolean isLogged(Context context) {
         return SharedPreferencesManager.getLinkedInId(context) != null;
     }
-
 
     public static Observable<Coworkspace> getCurrentCowerkspace(Context context) {
 
@@ -48,56 +45,5 @@ public class ProfileManager {
 
         return null;
     }
-
-//    @Nullable
-//    @WorkerThread
-//    public static Coworkspace getCurrentCowerkspace(Context context) {
-//        loadCoworker(context);
-//
-//        if (mCoworker != null && mCoworker.currentCoworkspaceId != null)
-//            return CoworkspaceManager.getCoworkspace(mCoworker.currentCoworkspaceId);
-//        else
-//            return null;
-//    }
-//
-//    @Nullable
-//    @WorkerThread
-//    public static Coworkspace[] getFavoriteCowerkspaces(Context context) {
-//        loadCoworker(context);
-//
-//        if (mCoworker != null) {
-//            List<String> favoriteCoworkspacesId = mCoworker.favoriteCoworkspacesId;
-//
-//            if (mCoworker != null && mCoworker.favoriteCoworkspacesId != null) {
-//                Coworkspace[] favoriteCoworkspaces = new Coworkspace[mCoworker.favoriteCoworkspacesId.size()];
-//
-//                List<Coworkspace> coworkspaces = CoworkspaceManager.getCoworkspaces();
-//
-//                if (coworkspaces != null)
-//                    for (int i = 0; i < favoriteCoworkspacesId.size(); i++) {
-//                        for (Coworkspace coworkspace : coworkspaces) {
-//                            if (favoriteCoworkspacesId.get(i).equals(coworkspace.id)) {
-//                                favoriteCoworkspaces[i] = coworkspace;
-//                                break;
-//                            }
-//                        }
-//                    }
-//
-//                return favoriteCoworkspaces;
-//            } else {
-//                return null;
-//            }
-//        } else
-//            return null;
-//    }
-//
-//    // ---------------- Private Methods --------------- //
-//
-//
-//    private static void loadCoworker(Context context) {
-//        String linkedInId = SharedPreferencesManager.getLinkedInId(context);
-//        if (mCoworker == null && linkedInId != null)
-//            mCoworker = CoworkerDataAccess.getCoworker(linkedInId);
-//    }
 
 }
