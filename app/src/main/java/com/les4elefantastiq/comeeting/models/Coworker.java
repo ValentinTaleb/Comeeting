@@ -5,6 +5,9 @@ import com.les4elefantastiq.comeeting.models.linkedin.Position;
 
 import java.util.List;
 
+/**
+ * Representation of somebody that go to Coworkspaces
+ */
 public class Coworker {
 
     // -------------- Objects, Variables -------------- //

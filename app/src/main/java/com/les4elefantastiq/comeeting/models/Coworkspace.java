@@ -2,6 +2,9 @@ package com.les4elefantastiq.comeeting.models;
 
 import java.util.List;
 
+/**
+ * Representation of a place where Coworkers go to work
+ */
 public class Coworkspace {
 
     // -------------- Objects, Variables -------------- //

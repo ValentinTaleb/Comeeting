@@ -7,10 +7,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * LiveFeedMessages represent the activities that happen in a Coworkspace.<br />
+ * That can be :
+ * <ul>
+ *     <li>A Coworker has entered the Coworkspace</li>
+ *     <li>A Coworker has sent a message on Twitter with the hashtag of the Coworkspace</li>
+ *     <li>The Admin of the Coworkspace want to send a message to all the Coworkers</li>
+ *     <li>The Coworkspace will close soon</li>
+ *     <li>...</li>
+ * </ul>
+ */
 public class LiveFeedMessage implements Comparable<LiveFeedMessage> {
 
     // -------------- Objects, Variables -------------- //
 
+    // TODO : Transform this to a enum
     public static final int TYPE_ARRIVAL = 0;
     public static final int TYPE_TWITTER = 1;
     public static final int TYPE_COWORKSPACE_ADMIN = 2;

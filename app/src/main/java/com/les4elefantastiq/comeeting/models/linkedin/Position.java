@@ -1,5 +1,6 @@
 package com.les4elefantastiq.comeeting.models.linkedin;
 
+// FIXME : This class is totally useless. Delete it !
 public class Position {
 
     // -------------- Objects, Variables -------------- //
