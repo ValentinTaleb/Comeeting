@@ -14,7 +14,7 @@ Ce projet est un fork de [github.com/micbelgique/DevCamp2016-Les4Elefantastiq](h
 Description du projet :
 Le but est de proposer aux coworkers, une vision sur les différents membres des coworkings aux alentours afin d'encourager les échanges entre les coworkers.
 
-<img src="/Readme/Screenshot_1.png" width="400">
-<img src="/Readme/Screenshot_2.png" width="400">
-<img src="/Readme/Screenshot_3.png" width="400">
-<img src="/Readme/Screenshot_4.png" width="400">
+<img src="/Readme/Screenshot_1.jpg" width="400">
+<img src="/Readme/Screenshot_2.jpg" width="400">
+<img src="/Readme/Screenshot_3.jpg" width="400">
+<img src="/Readme/Screenshot_4.jpg" width="400">
