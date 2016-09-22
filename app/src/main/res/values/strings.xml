@@ -20,6 +20,6 @@
     <string name="Today_is_his_birthday">C\'est son anniversaire !</string>
     <string name="Info">Info</string>
     <string name="Retweet">Retweet</string>
-    <string name="X_coworkers_now">%1$i coworkers actuellement"</string>
+    <string name="X_coworkers_now">%1$d coworkers actuellement</string>
 
 </resources>

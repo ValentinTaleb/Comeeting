@@ -385,6 +385,7 @@ public class CoworkspaceFragment extends Fragment {
 
             case MENU_FAVORITE: // Set this Coworkspace as Favorite
                 // Not implemented yet on server side
+                Toast.makeText(getActivity(), "Not implemented yet", Toast.LENGTH_SHORT).show();
                 break;
 
             case MENU_INFORMATION: // Open Activity that display the informations about this Coworkspace
