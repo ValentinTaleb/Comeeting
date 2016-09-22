@@ -178,7 +178,7 @@ public class NavigationActivity extends BaseActivity implements NavigationView.O
      * Load the current Coworkspace
      */
     private void loadCurrentCoworkspace() {
-        mCurrentCoworkspacesSubscription = ProfileManager.getCurrentCowerkspace(getBaseContext())
+        mCurrentCoworkspacesSubscription = ProfileManager.getCurrentCoworkspace(getBaseContext())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(currentCoworkspaceObserver);

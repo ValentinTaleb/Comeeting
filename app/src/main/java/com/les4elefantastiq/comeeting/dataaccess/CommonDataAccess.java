@@ -13,7 +13,7 @@ public class CommonDataAccess {
 
     // -------------- Objects, Variables -------------- //
 
-    public static final String API_URL = "http://comeeting-api.azurewebsites.net";
+    private static final String API_URL = "http://comeeting-api.azurewebsites.net";
 
     private static Retrofit retrofit;
 

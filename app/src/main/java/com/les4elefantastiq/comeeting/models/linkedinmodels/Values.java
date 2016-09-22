@@ -4,12 +4,12 @@ import com.les4elefantastiq.comeeting.models.Position;
 
 public class Values {
 
-    int id;
-    Company company;
-    Boolean isCurrent;
-    LinkedInDate startDate;
-    LinkedInDate endDate;
-    String title;
+    public int id;
+    public Company company;
+    public Boolean isCurrent;
+    public LinkedInDate startDate;
+    public LinkedInDate endDate;
+    public String title;
 
     public Values(int id, Company company, Boolean isCurrent, LinkedInDate startDate, LinkedInDate endDate, String title) {
         this.id = id;

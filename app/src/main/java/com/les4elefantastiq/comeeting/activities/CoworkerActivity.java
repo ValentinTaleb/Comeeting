@@ -84,7 +84,7 @@ public class CoworkerActivity extends BaseActivity {
     // ------------------- Methods -------------------- //
 
     /**
-     * Load the information about the specified Coworker
+     * Load the specified Coworker and emit it to {@code mCoworkerObserver}
      *
      * @param coworkerId The id of the Coworker to display
      */

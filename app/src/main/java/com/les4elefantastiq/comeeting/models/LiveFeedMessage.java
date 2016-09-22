@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class LiveFeedMessage implements Comparable<LiveFeedMessage> {
 
@@ -43,12 +44,13 @@ public class LiveFeedMessage implements Comparable<LiveFeedMessage> {
 
     // ---------------- Public Methods ---------------- //
 
+    @NonNull
     public Date getDate() {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateTime);
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).parse(dateTime);
         } catch (ParseException e) {
             e.printStackTrace();
-            return null;
+            return new Date(0);
         }
     }
 

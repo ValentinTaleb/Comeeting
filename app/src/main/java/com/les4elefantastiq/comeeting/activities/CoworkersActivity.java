@@ -76,7 +76,7 @@ public class CoworkersActivity extends BaseActivity {
     // ------------------- Methods -------------------- //
 
     /**
-     * Load all the Coworksers of the specified Coworkspace
+     * Load all the Coworkers of the specified Coworkspace and emit them to {@code Observer}
      *
      * @param coworkspaceId The id of the Coworkspace
      */

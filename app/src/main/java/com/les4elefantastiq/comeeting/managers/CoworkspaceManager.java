@@ -1,8 +1,6 @@
 package com.les4elefantastiq.comeeting.managers;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 
 import com.les4elefantastiq.comeeting.dataaccess.CoworkspaceDataAccess;
 import com.les4elefantastiq.comeeting.models.Coworker;
@@ -28,8 +26,7 @@ public class CoworkspaceManager {
                 .first(coworkspace -> coworkspace.id.equals(coworkspaceId));
     }
 
-    @Nullable
-    @WorkerThread
+    @NonNull
     public static Observable<List<Coworker>> getCoworkers(Coworkspace coworkspace) {
         return CoworkspaceDataAccess.getCoworkers(coworkspace);
     }

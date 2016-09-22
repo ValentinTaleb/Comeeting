@@ -99,7 +99,7 @@ public class CoworkspaceFragment extends Fragment {
     // ------------------- Methods -------------------- //
 
     /**
-     * Load a Coworkspace based of the specified id
+     * Load the specified Coworkspace and emit it to {@code mCoworkspaceObserver}
      *
      * @param coworkspaceId The id of the Coworkspace
      */
@@ -192,7 +192,7 @@ public class CoworkspaceFragment extends Fragment {
     }
 
     /**
-     * Load the LiveFeedMessages of the specified Coworkspace
+     * Load the LiveFeedMessages of the specified Coworkspace and emit them to {@code mLiveFeedMessageObserver}
      *
      * @param coworkspaceId The id of the Coworkspace
      */

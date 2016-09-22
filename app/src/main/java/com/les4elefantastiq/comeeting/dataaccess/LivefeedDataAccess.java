@@ -13,6 +13,8 @@ import rx.Observable;
 
 public class LivefeedDataAccess {
 
+    // ---------------- Public Methods ---------------- //
+
     /**
      * @return A List of LiveFeedMessage of the specified Coworkspace
      */
@@ -21,6 +23,9 @@ public class LivefeedDataAccess {
         return CommonDataAccess.getRetrofit().create(LivefeedInterface.class).getLivefeedMessages(coworkspace.id);
 
     }
+
+
+    // -------------- Retrofit Interfaces -------------- //
 
     private interface LivefeedInterface {
         @GET("/api/coworkspace/{coworkspaceId}/livefeed/messages")

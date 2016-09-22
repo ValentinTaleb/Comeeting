@@ -13,6 +13,8 @@ import rx.Observable;
 
 public class CoworkspaceDataAccess {
 
+    // ---------------- Public Methods ---------------- //
+
     /**
      * @return A List of all the Coworkspaces
      */
@@ -28,6 +30,9 @@ public class CoworkspaceDataAccess {
     public static Observable<List<Coworker>> getCoworkers(Coworkspace coworkspace) {
         return CommonDataAccess.getRetrofit().create(CoworkspaceInterface.class).cowokers(coworkspace.id);
     }
+
+
+    // -------------- Retrofit Interfaces -------------- //
 
     private interface CoworkspacesInterface {
         @GET("/api/coworkspaces")

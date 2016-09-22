@@ -1,6 +1,7 @@
 package com.les4elefantastiq.comeeting.managers;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.les4elefantastiq.comeeting.dataaccess.CoworkerDataAccess;
 import com.les4elefantastiq.comeeting.models.Coworkspace;
@@ -20,7 +21,8 @@ public class ProfileManager {
         return SharedPreferencesManager.getLinkedInId(context) != null;
     }
 
-    public static Observable<Coworkspace> getCurrentCowerkspace(Context context) {
+    @NonNull
+    public static Observable<Coworkspace> getCurrentCoworkspace(Context context) {
 
         String linkedInId = SharedPreferencesManager.getLinkedInId(context);
 
@@ -33,6 +35,8 @@ public class ProfileManager {
                         .flatMap(CoworkspaceManager::getCoworkspace);
     }
 
+    // TODO : Implement me
+    @NonNull
     public static Observable<List<Coworkspace>> getFavoriteCoworkspaces() {
         //        Observable favoritesCoworkspaces =
         //                // Get the user Coworker

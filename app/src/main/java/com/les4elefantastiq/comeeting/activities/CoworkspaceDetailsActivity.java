@@ -81,7 +81,7 @@ public class CoworkspaceDetailsActivity extends BaseActivity {
     // ------------------- Methods -------------------- //
 
     /**
-     * Load the information of the specified Coworkspace
+     * Load the specified Coworkspace and emit it to {@code mCoworkspaceObserver}
      *
      * @param coworkspaceId The id of the Coworkspace
      */

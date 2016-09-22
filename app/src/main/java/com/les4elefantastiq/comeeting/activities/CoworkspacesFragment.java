@@ -76,7 +76,7 @@ public class CoworkspacesFragment extends Fragment {
     // ------------------- Methods -------------------- //
 
     /**
-     * Load all the Coworkspaces
+     * Load all the Coworkspaces and emit them to {@code mCoworkspacesObserver}
      */
     private void loadCoworkspaces() {
         mCoworkspacesSubscription = CoworkspaceManager.getCoworkspaces()
