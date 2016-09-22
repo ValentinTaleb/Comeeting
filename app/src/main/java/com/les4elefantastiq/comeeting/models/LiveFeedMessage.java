@@ -22,7 +22,7 @@ public class LiveFeedMessage implements Comparable<LiveFeedMessage> {
 
     // -------------- Objects, Variables -------------- //
 
-    // TODO : Transform this to a enum
+    // TODO : Transform this to an enum
     public static final int TYPE_ARRIVAL = 0;
     public static final int TYPE_TWITTER = 1;
     public static final int TYPE_COWORKSPACE_ADMIN = 2;

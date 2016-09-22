@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import rx.Observer;
 import rx.Subscription;
@@ -300,7 +301,7 @@ public class CoworkspaceFragment extends Fragment {
             objectsHolder.textView_Name.setText(liveFeedMessage.title);
             objectsHolder.textView_Description.setText(liveFeedMessage.text);
             try {
-                Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(liveFeedMessage.dateTime);
+                Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US).parse(liveFeedMessage.dateTime);
                 String dateString = DateUtils.getRelativeTimeSpanString(date.getTime()).toString();
                 objectsHolder.textView_Date.setText(dateString);
             } catch (ParseException e) {
