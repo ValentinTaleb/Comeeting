@@ -172,10 +172,9 @@ public class CoworkspacesFragment extends Fragment {
                     .into(objectsHolder.imageView);
 
             objectsHolder.textView_Name.setText(coworkspace.name);
-            objectsHolder.textView_CowerkersCount.setText(coworkspace.coworkers.size() + " coworkers actuellement");
-            // objectsHolder.textView_Distance.setText(coworkspace.);
+            objectsHolder.textView_CowerkersCount.setText(getString(R.string.X_coworkers_now, coworkspace.coworkers.size()));
+            // objectsHolder.textView_Distance.setText(...);
             objectsHolder.textView_Opening.setText("Ouvert de 8h à 17h");
-            objectsHolder.textView_CowerkersCount.setText(coworkspace.coworkers.size() + " Coworkers");
             objectsHolder.textView_Distance.setText("3 km");
             objectsHolder.textView_Address.setText(coworkspace.address + "\n" + coworkspace.zipCode + " " + coworkspace.city);
 
@@ -186,15 +185,10 @@ public class CoworkspacesFragment extends Fragment {
             return convertView;
         }
 
-        private View.OnClickListener onCoworkspaceClickListener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CoworkspaceActivity.class)
-                        .putExtra(CoworkspaceFragment.EXTRA_COWORKSPACE_ID, ((ObjectsHolder) view.getTag()).coworkspace.id);
-                startActivity(intent);
-            }
-
+        private View.OnClickListener onCoworkspaceClickListener = view -> {
+            Intent intent = new Intent(getActivity(), CoworkspaceActivity.class)
+                    .putExtra(CoworkspaceFragment.EXTRA_COWORKSPACE_ID, ((ObjectsHolder) view.getTag()).coworkspace.id);
+            startActivity(intent);
         };
 
     }

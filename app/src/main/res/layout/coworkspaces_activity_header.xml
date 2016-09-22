@@ -5,5 +5,5 @@
     android:paddingLeft="@dimen/default_margin"
     android:paddingRight="@dimen/default_margin"
     android:paddingTop="@dimen/default_margin"
-    android:text="COWORKSPACES LES PLUS PROCHES"
+    android:text="@string/NEAREST_COWORKSPACES"
     android:textColor="@color/greySecondaryText" />

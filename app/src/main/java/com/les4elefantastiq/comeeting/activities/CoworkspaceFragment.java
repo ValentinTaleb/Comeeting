@@ -311,7 +311,7 @@ public class CoworkspaceFragment extends Fragment {
 
             // Arrival of a coworker
             if (liveFeedMessage.type == LiveFeedMessage.TYPE_ARRIVAL) {
-                objectsHolder.textView_Badge.setText("Arrivée");
+                objectsHolder.textView_Badge.setText(R.string.Arrival);
 
                 Picasso.with(getActivity())
                         .load(liveFeedMessage.pictureUrl)
@@ -320,14 +320,14 @@ public class CoworkspaceFragment extends Fragment {
 
                 if (liveFeedMessage.isBirthday) {
                     objectsHolder.textView_Subdescription.setVisibility(View.VISIBLE);
-                    objectsHolder.textView_Subdescription.setText("C'est son anniversaire !");
+                    objectsHolder.textView_Subdescription.setText(R.string.Today_is_his_birthday);
                 } else
                     objectsHolder.textView_Subdescription.setVisibility(View.GONE);
             }
 
             // Admin message
             else if (liveFeedMessage.type == LiveFeedMessage.TYPE_COWORKSPACE_ADMIN) {
-                objectsHolder.textView_Badge.setText("Info");
+                objectsHolder.textView_Badge.setText(R.string.Info);
 
                 objectsHolder.imageView.setImageResource(R.drawable.ic_live_feed_admin);
 
@@ -336,7 +336,7 @@ public class CoworkspaceFragment extends Fragment {
 
             // Twitter message
             else if (liveFeedMessage.type == LiveFeedMessage.TYPE_TWITTER) {
-                objectsHolder.textView_Badge.setText("Retweet");
+                objectsHolder.textView_Badge.setText(R.string.Retweet);
 
                 Picasso.with(getActivity())
                         .load(liveFeedMessage.pictureUrl)
@@ -346,7 +346,7 @@ public class CoworkspaceFragment extends Fragment {
                 objectsHolder.textView_Subdescription.setVisibility(View.GONE);
 
             } else if (liveFeedMessage.type == LiveFeedMessage.TYPE_COWORKSPACE_OPENING) {
-                objectsHolder.textView_Badge.setText("Info");
+                objectsHolder.textView_Badge.setText(R.string.Info);
 
                 objectsHolder.imageView.setImageResource(R.drawable.ic_live_feed_clock);
                 objectsHolder.textView_Subdescription.setVisibility(View.VISIBLE);
@@ -370,11 +370,11 @@ public class CoworkspaceFragment extends Fragment {
 
         if (mCoworkspace != null) {
             MenuItem menuItemInformation = menu.add(0, MENU_INFORMATION, 0, "Information");
-            menuItemInformation.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menuItemInformation.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             menuItemInformation.setIcon(R.drawable.ic_info_outline);
 
             MenuItem menuItemFavorite = menu.add(0, MENU_FAVORITE, 0, "Favoris");
-            menuItemFavorite.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            menuItemFavorite.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             menuItemFavorite.setIcon(R.drawable.ic_favorite);
         }
     }

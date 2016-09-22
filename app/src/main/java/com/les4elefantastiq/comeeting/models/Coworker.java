@@ -12,14 +12,13 @@ public class Coworker {
 
     // -------------- Objects, Variables -------------- //
 
-    public String linkedInId;
+    public final String linkedInId;
     public String firstName;
     public String lastName;
     public String pictureUrl;
     public String summary;
     public String headline;
     public List<Position> positions;
-    public Boolean isPresent;
 
     @SerializedName(value = "favoriteCoworkspaces")
     public List<String> favoriteCoworkspacesId;
@@ -30,7 +29,7 @@ public class Coworker {
 
     // ----------------- Constructor ------------------ //
 
-    public Coworker(String linkedInId, String firstName, String lastName, String pictureUrl, String summary, String headline, List<Position> positions, Boolean isPresent, List<String> favoriteCoworkspacesId, String currentCoworkspaceId) {
+    public Coworker(String linkedInId, String firstName, String lastName, String pictureUrl, String summary, String headline, List<Position> positions, List<String> favoriteCoworkspacesId, String currentCoworkspaceId) {
         this.linkedInId = linkedInId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -38,7 +37,6 @@ public class Coworker {
         this.summary = summary;
         this.headline = headline;
         this.positions = positions;
-        this.isPresent = isPresent;
         this.favoriteCoworkspacesId = favoriteCoworkspacesId;
         this.currentCoworkspaceId = currentCoworkspaceId;
     }

@@ -7,5 +7,19 @@
     <string name="Whoops_an_error_has_occured__Check_your_internet_connection">Oups, une erreur est survenue. Vérifiez votre connexion internet.</string>
     <string name="Please_wait">Please wait …</string>
     <string name="All_coworkspaces">Tous les coworkspaces</string>
+    <string name="NEAREST_COWORKSPACES">COWORKSPACES LES PLUS PROCHES</string>
+    <string name="Currently_present">Présent maintenant</string>
+    <string name="Coworking_goes_social">Coworking goes social</string>
+    <string name="Log_in_with_linkedIn">Connexion avec LinkedIn</string>
+    <string name="See_more">Voir plus</string>
+    <string name="Today_in_this_coworkspace">Aujourd\'hui dans ce coworkspace</string>
+    <string name="Openning_hours">Horaire d\'ouverture</string>
+    <string name="LinkedIn_profile">Profil LinkedIn</string>
+    <string name="LinkedIn_profile_of_X">"Profil LinkedIn de %1$s</string>
+    <string name="Arrival">Arrivée</string>
+    <string name="Today_is_his_birthday">C\'est son anniversaire !</string>
+    <string name="Info">Info</string>
+    <string name="Retweet">Retweet</string>
+    <string name="X_coworkers_now">%1$i coworkers actuellement"</string>
 
 </resources>

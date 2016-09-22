@@ -49,9 +49,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/layout"
             android:layout_marginTop="@dimen/default_margin"
-            android:layout_toRightOf="@+id/layout"
             android:background="@color/greyDivider" />
 
     </LinearLayout>

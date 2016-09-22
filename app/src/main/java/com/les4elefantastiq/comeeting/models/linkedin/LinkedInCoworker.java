@@ -60,7 +60,7 @@ public class LinkedInCoworker {
             }
         }
 
-        return new Coworker(linkedInId, firstName, lastName, pictureUrl, summary, headline, coworkerPositions, null, favoriteCoworkspacesId, currentCoworkspaceId);
+        return new Coworker(linkedInId, firstName, lastName, pictureUrl, summary, headline, coworkerPositions, favoriteCoworkspacesId, currentCoworkspaceId);
     }
 
 }

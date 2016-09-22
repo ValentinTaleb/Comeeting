@@ -28,15 +28,15 @@ public class LiveFeedMessage implements Comparable<LiveFeedMessage> {
     public static final int TYPE_COWORKSPACE_ADMIN = 2;
     public static final int TYPE_COWORKSPACE_OPENING = 3;
 
-    public String title;
-    public String text;
-    public int type;
-    public String dateTime;
-    public String tweetLink;
-    public String sender;
-    public String coworkerLinkedInId;
-    public Boolean isBirthday;
-    public String pictureUrl;
+    public final String title;
+    public final String text;
+    public final int type;
+    public final String dateTime;
+    public final String tweetLink;
+    public final String sender;
+    public final String coworkerLinkedInId;
+    public final Boolean isBirthday;
+    public final String pictureUrl;
 
 
     // ----------------- Constructor ------------------ //

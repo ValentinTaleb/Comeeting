@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Coworking goes social"
+            android:text="@string/Coworking_goes_social"
             android:textColor="#AAFFFFFF" />
 
     </LinearLayout>
@@ -48,7 +48,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Connexion avec LinkedIn"
+            android:text="@string/Log_in_with_linkedIn"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />

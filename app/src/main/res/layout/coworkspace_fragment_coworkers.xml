@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:textStyle="bold"
         android:layout_height="wrap_content"
-        android:text="Présent maintenant"/>
+        android:text="@string/Currently_present"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,7 +60,7 @@
             android:id="@+id/textview_see_more"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Voir plus"
+            android:text="@string/See_more"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
@@ -75,6 +75,6 @@
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-        android:text="Aujourd'hui dans ce coworkspace"/>
+        android:text="@string/Today_in_this_coworkspace"/>
 
 </LinearLayout>

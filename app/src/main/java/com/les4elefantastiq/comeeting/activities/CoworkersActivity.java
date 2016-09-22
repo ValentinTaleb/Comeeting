@@ -182,14 +182,9 @@ public class CoworkersActivity extends BaseActivity {
             return convertView;
         }
 
-        private View.OnClickListener onCoworkerClickListener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                Coworker coworker = ((ObjectsHolder) view.getTag()).coworker;
-                startActivity(new Intent(CoworkersActivity.this, CoworkerActivity.class).putExtra(CoworkerActivity.EXTRA_COWORKER_ID, coworker.linkedInId));
-            }
-
+        private View.OnClickListener onCoworkerClickListener = view -> {
+            Coworker coworker = ((ObjectsHolder) view.getTag()).coworker;
+            startActivity(new Intent(CoworkersActivity.this, CoworkerActivity.class).putExtra(CoworkerActivity.EXTRA_COWORKER_ID, coworker.linkedInId));
         };
 
     }

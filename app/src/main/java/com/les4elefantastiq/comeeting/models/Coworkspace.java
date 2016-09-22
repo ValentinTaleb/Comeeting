@@ -9,17 +9,17 @@ public class Coworkspace {
 
     // -------------- Objects, Variables -------------- //
 
-    public String id;
-    public String name;
-    public String pictureUrl;
-    public String description;
-    public Double geolocationLongitude;
-    public Double geolocationLatitude;
-    public int geofancingRadius;
-    public String address;
-    public String zipCode;
-    public String city;
-    public List<Coworker> coworkers;
+    public final String id;
+    public final String name;
+    public final String pictureUrl;
+    public final String description;
+    public final Double geolocationLongitude;
+    public final Double geolocationLatitude;
+    public final int geofancingRadius;
+    public final String address;
+    public final String zipCode;
+    public final String city;
+    public final List<Coworker> coworkers;
 
 
     // ----------------- Constructor ------------------ //

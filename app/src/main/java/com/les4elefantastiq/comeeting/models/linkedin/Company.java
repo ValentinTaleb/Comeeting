@@ -7,7 +7,7 @@ public class Company {
 
     // -------------- Objects, Variables -------------- //
 
-    public String name;
+    public final String name;
 
 
     // ----------------- Constructor ------------------ //
