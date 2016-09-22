@@ -1,4 +1,4 @@
-package com.les4elefantastiq.comeeting.models;
+package com.les4elefantastiq.comeeting.models.linkedin;
 
 public class Position {
 
@@ -10,6 +10,9 @@ public class Position {
     public String startDate;
     public String endDate;
     public String title;
+
+
+    // ----------------- Constructor ------------------ //
 
     public Position(int id, String companyName, Boolean isCurrent, String startDate, String endDate, String title) {
         this.id = id;

@@ -14,7 +14,7 @@ import com.les4elefantastiq.comeeting.R;
 import com.les4elefantastiq.comeeting.activities.utils.BaseActivity;
 import com.les4elefantastiq.comeeting.managers.CoworkerManager;
 import com.les4elefantastiq.comeeting.managers.SharedPreferencesManager;
-import com.les4elefantastiq.comeeting.models.linkedinmodels.LinkedInCoworker;
+import com.les4elefantastiq.comeeting.models.linkedin.LinkedInCoworker;
 import com.linkedin.platform.APIHelper;
 import com.linkedin.platform.LISessionManager;
 import com.linkedin.platform.errors.LIApiError;

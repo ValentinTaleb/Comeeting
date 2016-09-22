@@ -1,8 +1,11 @@
-package com.les4elefantastiq.comeeting.models.linkedinmodels;
+package com.les4elefantastiq.comeeting.models.linkedin;
 
-import com.les4elefantastiq.comeeting.models.Position;
-
+/**
+ * @see <a href="https://developer.linkedin.com/docs/fields/positions">LinkedIn doc about Position</a>
+ */
 public class Values {
+
+    // -------------- Objects, Variables -------------- //
 
     public int id;
     public Company company;
@@ -10,6 +13,9 @@ public class Values {
     public LinkedInDate startDate;
     public LinkedInDate endDate;
     public String title;
+
+
+    // ----------------- Constructor ------------------ //
 
     public Values(int id, Company company, Boolean isCurrent, LinkedInDate startDate, LinkedInDate endDate, String title) {
         this.id = id;
@@ -19,6 +25,9 @@ public class Values {
         this.endDate = endDate;
         this.title = title;
     }
+
+
+    // ---------------- Public Methods ---------------- //
 
     public Position getPosition() {
 

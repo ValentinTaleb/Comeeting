@@ -10,7 +10,7 @@ public class Coworkspace {
     public String name;
     public String pictureUrl;
     public String description;
-    public Double geolocationLongitude; // TODO: Create a Location object ?
+    public Double geolocationLongitude;
     public Double geolocationLatitude;
     public int geofancingRadius;
     public String address;

@@ -1,12 +1,14 @@
-package com.les4elefantastiq.comeeting.models.linkedinmodels;
+package com.les4elefantastiq.comeeting.models.linkedin;
 
 import com.google.gson.annotations.SerializedName;
 import com.les4elefantastiq.comeeting.models.Coworker;
-import com.les4elefantastiq.comeeting.models.Position;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representation of the LinkedIn user profile
+ */
 public class LinkedInCoworker {
 
     // -------------- Objects, Variables -------------- //
@@ -21,7 +23,7 @@ public class LinkedInCoworker {
     public Positions positions;
 
     @SerializedName(value = "favoriteCoworkspaces")
-    List<String> favoriteCoworkspacesId;
+    public List<String> favoriteCoworkspacesId;
 
     @SerializedName(value = "currentCoworkspace")
     public String currentCoworkspaceId;
@@ -41,24 +43,24 @@ public class LinkedInCoworker {
         this.currentCoworkspaceId = currentCoworkspaceId;
     }
 
+
     // ---------------- Public Methods ---------------- //
 
+    /**
+     * Based on the LinkedIn profile of the user, create a Coworker
+     * @return A Coworker based on the LinkedIn profile of the user
+     */
     public Coworker getCoworker() {
         String pictureUrl = pictureUrls.values.length > 0 ? pictureUrls.values[0] : null;
 
         List<Position> coworkerPositions = new ArrayList<>();
         if (positions.values != null) {
-            for (Values value : positions.values) { // TODO: rename Values in linkedInPosition
+            for (Values value : positions.values) {
                 coworkerPositions.add(value.getPosition());
             }
         }
 
-
         return new Coworker(linkedInId, firstName, lastName, pictureUrl, summary, headline, coworkerPositions, null, favoriteCoworkspacesId, currentCoworkspaceId);
     }
-
-    // ---------------- Private Methods --------------- //
-
-    // ----------------- Miscellaneous ---------------- //
 
 }

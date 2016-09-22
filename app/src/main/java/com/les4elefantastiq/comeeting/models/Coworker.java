@@ -1,6 +1,7 @@
 package com.les4elefantastiq.comeeting.models;
 
 import com.google.gson.annotations.SerializedName;
+import com.les4elefantastiq.comeeting.models.linkedin.Position;
 
 import java.util.List;
 
